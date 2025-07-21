@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rooster/HomeScreen.dart';
+import 'package:rooster/controllers/login_controller.dart'; // import controller
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,6 +11,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
+  final LoginController loginController = Get.put(LoginController());
+
   late AnimationController _logoCtrl;
   late Animation<double> _logoAnim;
 
@@ -69,6 +71,9 @@ class _LoginScreenState extends State<LoginScreen>
         ),
         const SizedBox(height: 6),
         TextField(
+          controller: label == 'Username'
+              ? loginController.emailController
+              : loginController.passwordController,
           obscureText: isPassword ? _obscurePwd : false,
           style: const TextStyle(color: Colors.black),
           decoration: InputDecoration(
@@ -110,17 +115,13 @@ class _LoginScreenState extends State<LoginScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin:
-                      const EdgeInsets.only(left: 40), // ⬅ Left margin of 24
+                  margin: const EdgeInsets.only(left: 40),
                   child: ScaleTransition(
                     scale: _logoAnim,
                     child: Image.asset('assets/images/logo.png', height: 100),
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
-                // 🍗 App Introduction Text
                 const Text(
                   'Welcome to Rooster!',
                   style: TextStyle(
@@ -138,9 +139,7 @@ class _LoginScreenState extends State<LoginScreen>
                     color: Colors.black87,
                   ),
                 ),
-
                 const SizedBox(height: 30),
-
                 FadeTransition(
                   opacity: _formFade,
                   child: Column(
@@ -159,71 +158,36 @@ class _LoginScreenState extends State<LoginScreen>
                         toggleObscure: () =>
                             setState(() => _obscurePwd = !_obscurePwd),
                       ),
-
-                      // 🔐 Forgot Password
-                      // Align(
-                      //   alignment: Alignment.centerRight,
-                      //   child: TextButton(
-                      //     onPressed: () {
-                      //       // Handle forgot password
-                      //     },
-                      //     child: const Text(
-                      //       'Forgot Password?',
-                      //       style: TextStyle(
-                      //         fontSize: 13,
-                      //         color: Colors.black87,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-
                       const SizedBox(height: 30),
-
-                      // 🔴 Login Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: theme.primaryColor,
-                            foregroundColor: theme.colorScheme.onPrimary,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                      Obx(() => SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: theme.primaryColor,
+                                foregroundColor: theme.colorScheme.onPrimary,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              onPressed: loginController.isLoading.value
+                                  ? null
+                                  : loginController.loginUser,
+                              child: loginController.isLoading.value
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : const Text(
+                                      'Login',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
                             ),
-                          ),
-                          onPressed: () => Get.to(HomeScreen()),
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-
+                          )),
                       const SizedBox(height: 14),
-
-                      // ✍️ Sign Up Option
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     const Text("Don't have an account?"),
-                      //     TextButton(
-                      //       onPressed: () {
-                      //         // Navigate to sign-up
-                      //       },
-                      //       child: Text(
-                      //         "Sign Up",
-                      //         style: TextStyle(
-                      //           color: theme.primaryColor,
-                      //           fontWeight: FontWeight.bold,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),
-   
               ],
             ),
           ),

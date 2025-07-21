@@ -1,6 +1,6 @@
-// custom_drawer.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rooster/Controllers/user_controller.dart'; // import your controller
 import 'package:rooster/ContactScreen.dart';
 import 'package:rooster/LoginScreen.dart';
 import 'package:rooster/ProfileScreen.dart';
@@ -12,28 +12,32 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final userController = Get.find<UserController>();
 
     return Drawer(
-      backgroundColor: colorScheme.background, // Use theme background
+      backgroundColor: colorScheme.background,
       child: Column(
         children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: colorScheme.primary, // App brand red
-            ),
-            accountName: const Text(
-              'John Doe',
-              style: TextStyle(color: Colors.white),
-            ),
-            accountEmail: const Text(
-              'john@example.com',
-              style: TextStyle(color: Colors.white70),
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: colorScheme.primary, size: 40),
-            ),
-          ),
+          Obx(() => UserAccountsDrawerHeader(
+                decoration: BoxDecoration(color: colorScheme.primary),
+                accountName: Text(
+                  userController.name.value.isNotEmpty
+                      ? userController.name.value
+                      : 'John Doe',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                accountEmail: Text(
+                  userController.email.value.isNotEmpty
+                      ? userController.email.value
+                      : 'john@example.com',
+                  style: const TextStyle(color: Colors.white70),
+                ),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child:
+                      Icon(Icons.person, color: colorScheme.primary, size: 40),
+                ),
+              )),
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -64,10 +68,12 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerItem(BuildContext context,
-      {required IconData icon,
-      required String label,
-      required VoidCallback onTap}) {
+  Widget _buildDrawerItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 

@@ -44,13 +44,13 @@ class NewsDetailScreen extends StatelessWidget {
 
             // 📝 Short description
             Text(
-              news.description,
+              news.shortDescription,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
 
             // 📅 Date
             Row(
@@ -63,7 +63,8 @@ class NewsDetailScreen extends StatelessWidget {
                 ),
               ],
             ),
-                   const SizedBox(height: 16),
+
+            const SizedBox(height: 16),
 
             // 🏷️ Tags/Chips
             Wrap(
@@ -110,6 +111,7 @@ class NewsDetailScreen extends StatelessWidget {
     );
   }
 
+  /// 🧱 Content Block Renderer
   List<Widget> _buildContentBlocks(List<NewsContent> blocks) {
     final List<Widget> widgets = [];
     int i = 0;
@@ -169,18 +171,19 @@ class NewsDetailScreen extends StatelessWidget {
               ),
             ),
           );
-          i += 2; // Skip media + its description
+          i += 2;
         } else {
-          i++; // Skip media only
+          i++;
         }
       } else {
-        // Skip loose text blocks
         i++;
       }
     }
 
     return widgets;
   }
+
+  /// 🔖 Reusable Chip Builder
   Widget _buildChip(String label, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),

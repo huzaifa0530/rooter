@@ -18,8 +18,8 @@ class HandbookListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            const Icon(Icons.restaurant_menu, size: 24),
-            const SizedBox(width: 8),
+            // const Icon(Icons.restaurant_menu, size: 24),
+            // const SizedBox(width: 2),
             Text('chef_handbook'.tr),
           ],
         ),
@@ -69,84 +69,92 @@ class HandbookListScreen extends StatelessWidget {
                           crossAxisCount: 2,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,
-                          childAspectRatio: 0.7,
+                          childAspectRatio: 0.55,
+
                         ),
                         itemBuilder: (_, index) {
                           final handbook = controller.handbooks[index];
-                          return Material(
-                            color: theme.cardColor,
-                            borderRadius: BorderRadius.circular(16),
-                            elevation: 6,
-                            shadowColor: Colors.black12,
-                            child: InkWell(
-                              onTap: () => Get.to(() =>
-                                  HandbookDetailScreen(handbook: handbook)),
+                          return 
+                          
+                          SizedBox(
+                             height: 2800,
+                            child: Material(
+                              color: theme.cardColor,
                               borderRadius: BorderRadius.circular(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(16)),
-                                    child: SizedBox(
-                                      height: 140,
-                                      width: double.infinity,
-                                      child: handbook.thumbnailUrl
-                                              .startsWith('http')
-                                          ? Image.network(
-                                              handbook.thumbnailUrl,
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (_, __, ___) =>
-                                                  Container(
-                                                color: Colors.grey[100],
-                                                child: const Center(
-                                                  child: Icon(Icons.menu_book,
-                                                      size: 50,
-                                                      color: Colors.black45),
+                              elevation: 6,
+                              shadowColor: Colors.black12,
+                              child: InkWell(
+                                onTap: () => Get.to(() =>
+                                    HandbookDetailScreen(handbook: handbook)),
+                                borderRadius: BorderRadius.circular(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(
+                                          top: Radius.circular(16)),
+                                      child: SizedBox(
+                                        height: 140,
+                                        width: double.infinity,
+                                        child: handbook.thumbnailUrl
+                                                .startsWith('http')
+                                            ? Image.network(
+                                                handbook.thumbnailUrl,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (_, __, ___) =>
+                                                    Container(
+                                                  color: Colors.grey[100],
+                                                  child: const Center(
+                                                    child: Icon(Icons.menu_book,
+                                                        size: 50,
+                                                        color: Colors.black45),
+                                                  ),
                                                 ),
+                                              )
+                                            : Image.asset(
+                                                handbook.thumbnailUrl,
+                                                fit: BoxFit.cover,
                                               ),
-                                            )
-                                          : Image.asset(
-                                              handbook.thumbnailUrl,
-                                              fit: BoxFit.cover,
-                                            ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            handbook.title,
-                                            style: theme.textTheme.titleMedium
-                                                ?.copyWith(
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          const SizedBox(height: 6),
-                                          Expanded(
-                                            child: Text(
-                                              handbook.description,
-                                              maxLines: 3,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: theme.textTheme.bodySmall
-                                                  ?.copyWith(
-                                                      color: Colors.grey[600]),
-                                            ),
-                                          ),
-                                        ],
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              handbook.title,
+                                              style: theme.textTheme.titleMedium
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Expanded(
+                                              child: Text(
+                                                handbook.description,
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: theme.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                        color: Colors.grey[600]),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );
+                       
+                       
                         },
                       )
                     : ListView.separated(

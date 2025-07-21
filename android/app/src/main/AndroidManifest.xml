@@ -2,7 +2,7 @@
   <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:label="Rooster"
+        android:label="Rooster Handbuch"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
        

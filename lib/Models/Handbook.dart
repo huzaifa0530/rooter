@@ -1,23 +1,26 @@
+// models/handbook.dart
+
+enum ContentType { image, text, video }
+
+class HandbookContent {
+  final ContentType type;
+  final String data;
+
+  HandbookContent({required this.type, required this.data});
+}
+
 class Handbook {
   final String id;
   final String title;
   final String description;
-  final String content;
   final String thumbnailUrl;
+  final List<HandbookContent> contentBlocks;
 
   Handbook({
     required this.id,
     required this.title,
     required this.description,
-    required this.content,
     required this.thumbnailUrl,
+    required this.contentBlocks,
   });
-
-  factory Handbook.fromJson(Map<String, dynamic> json) => Handbook(
-        id: json['id'].toString(),
-        title: json['title'] ?? '',
-        description: json['description'] ?? '',
-        content: json['content'] ?? '',
-        thumbnailUrl: json['thumbnail_url'] ?? '',
-      );
 }

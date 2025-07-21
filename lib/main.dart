@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rooster/Controllers/user_controller.dart';
 import 'package:rooster/translations.dart';
 import 'package:rooster/SplashScreen.dart';
 
 void main() {
+  Get.put(UserController());
   runApp(const RoosterApp());
 }
 
@@ -15,7 +17,7 @@ class RoosterApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'ROOSTER',
       theme: ThemeData(
-          fontFamily: 'Poppins',
+        fontFamily: 'Poppins',
         primaryColor: const Color(0xFFF60705), // Red (Brand Color)
         scaffoldBackgroundColor: Colors.white, // Changed from yellow to white
         colorScheme: const ColorScheme(

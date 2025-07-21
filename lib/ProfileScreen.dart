@@ -1,10 +1,39 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 import 'package:rooster/widgets/custom_bottom_nav.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String userName = '';
+  String userEmail = '';
+
+  final secureStorage = const FlutterSecureStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    final userJson = await secureStorage.read(key: 'user');
+    if (userJson != null) {
+      final user = jsonDecode(userJson);
+      setState(() {
+        userName = user['name'] ?? '';
+        userEmail = user['email'] ?? '';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +73,19 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
+
+            // 👇 Inject name/email from secure storage
             _buildProfileTile(
-                icon: Icons.person,
-                label: 'name'.tr,
-                value: 'Muhammad Huzaifa'),
+              icon: Icons.person,
+              label: 'name'.tr,
+              value: userName.isNotEmpty ? userName : '...',
+            ),
             _buildProfileTile(
-                icon: Icons.email,
-                label: 'email'.tr,
-                value: 'huzaifa@example.com'),
+              icon: Icons.email,
+              label: 'email'.tr,
+              value: userEmail.isNotEmpty ? userEmail : '...',
+            ),
+
             _buildProfileTile(
                 icon: Icons.phone, label: 'phone'.tr, value: '+92 312 0000000'),
             _buildProfileTile(
@@ -67,7 +101,6 @@ class ProfileScreen extends StatelessWidget {
                 label: 'city'.tr,
                 value: 'Islamabad'),
 
-      
             const SizedBox(height: 32),
             Text(
               'choose_language'.tr,

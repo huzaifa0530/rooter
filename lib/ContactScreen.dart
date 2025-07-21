@@ -1,11 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
-import 'package:rooster/widgets/custom_bottom_nav.dart';
-
-class ContactUsScreen extends StatelessWidget {
+import 'dart:convert';
+class ContactUsScreen extends StatefulWidget {
   const ContactUsScreen({super.key});
 
+  @override
+  State<ContactUsScreen> createState() => _ContactUsScreenState();
+}
+
+class _ContactUsScreenState extends State<ContactUsScreen> {
+  final _storage = const FlutterSecureStorage();
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final userJson = await _storage.read(key: 'user');
+    if (userJson != null) {
+      final user = jsonDecode(userJson);
+      setState(() {
+        _nameController.text = user['name'] ?? '';
+        _emailController.text = user['email'] ?? '';
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -13,8 +40,7 @@ class ContactUsScreen extends StatelessWidget {
 
     return MainScaffold(
       title: 'contact_us'.tr,
-       currentIndex: null,
-
+      currentIndex: null,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -29,19 +55,26 @@ class ContactUsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              'contact_subtext'.tr,
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text('contact_subtext'.tr, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 30),
-            _buildTextField(label: 'your_name'.tr, theme: theme),
+            _buildTextField(
+              label: 'your_name'.tr,
+              controller: _nameController,
+              theme: theme,
+            ),
             const SizedBox(height: 16),
             _buildTextField(
-                label: 'your_email'.tr,
-                inputType: TextInputType.emailAddress,
-                theme: theme),
+              label: 'your_email'.tr,
+              controller: _emailController,
+              inputType: TextInputType.emailAddress,
+              theme: theme,
+            ),
             const SizedBox(height: 16),
-            _buildTextArea(label: 'your_message'.tr, theme: theme),
+            _buildTextArea(
+              label: 'your_message'.tr,
+              controller: _messageController,
+              theme: theme,
+            ),
             const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
@@ -77,10 +110,12 @@ class ContactUsScreen extends StatelessWidget {
 
   Widget _buildTextField({
     required String label,
+    required TextEditingController controller,
     required ThemeData theme,
     TextInputType inputType = TextInputType.text,
   }) {
     return TextField(
+      controller: controller,
       keyboardType: inputType,
       style: theme.textTheme.bodyMedium,
       decoration: InputDecoration(
@@ -88,8 +123,7 @@ class ContactUsScreen extends StatelessWidget {
         labelStyle: theme.textTheme.bodySmall,
         filled: true,
         fillColor: Colors.grey.shade200,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -100,9 +134,11 @@ class ContactUsScreen extends StatelessWidget {
 
   Widget _buildTextArea({
     required String label,
+    required TextEditingController controller,
     required ThemeData theme,
   }) {
     return TextField(
+      controller: controller,
       maxLines: 5,
       keyboardType: TextInputType.multiline,
       style: theme.textTheme.bodyMedium,
@@ -112,8 +148,7 @@ class ContactUsScreen extends StatelessWidget {
         labelStyle: theme.textTheme.bodySmall,
         filled: true,
         fillColor: Colors.grey.shade200,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,

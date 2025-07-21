@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rooster/Models/Handbook.dart';
-import 'package:rooster/widgets/custom_bottom_nav.dart';
 
 class HandbookDetailScreen extends StatelessWidget {
   final Handbook handbook;
@@ -13,15 +12,14 @@ class HandbookDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text('ROOSTER',
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('ROOSTER', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 🖼 Cover Image
+            // 🖼 Main Thumbnail
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: SizedBox(
@@ -33,8 +31,7 @@ class HandbookDetailScreen extends StatelessWidget {
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Container(
                           color: Colors.grey[100],
-                          child:
-                              const Icon(Icons.image_not_supported, size: 80),
+                          child: const Icon(Icons.image_not_supported, size: 80),
                         ),
                       )
                     : Image.asset(
@@ -43,52 +40,24 @@ class HandbookDetailScreen extends StatelessWidget {
                       ),
               ),
             ),
+
             const SizedBox(height: 20),
 
             // 🧾 Title & Description
             Text(
               handbook.title,
-              style: theme.textTheme.headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               handbook.description,
-              style:
-                  theme.textTheme.bodyMedium?.copyWith(color: Colors.black87),
-            ),
-
-            const SizedBox(height: 16),
-
-            // 🎥 Optional Video Preview Placeholder
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Container(
-                color: Colors.black12,
-                width: double.infinity,
-                height: 180,
-                child: const Center(
-                  child: Icon(Icons.play_circle_fill,
-                      color: Colors.black45, size: 64),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Watch video tutorial on how to apply these techniques for best results.',
-              style: TextStyle(
-                  fontSize: 13,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.black54),
+              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black87),
             ),
 
             const SizedBox(height: 24),
 
-            // 📖 Full Content
-            Text(
-              handbook.content,
-              style: theme.textTheme.bodyLarge?.copyWith(height: 1.6),
-            ),
+            // 🔁 Dynamic Content Blocks
+            ...handbook.contentBlocks.map((block) => _buildContentBlock(block)),
 
             const SizedBox(height: 24),
 
@@ -130,7 +99,7 @@ class HandbookDetailScreen extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'Chef’s Tip: Always let your chicken rest for 5 minutes after frying to keep it juicy and crispy!',
-                      style: TextStyle(color: Colors.black87, fontSize: 14),
+                      style: const TextStyle(color: Colors.black87, fontSize: 14),
                     ),
                   )
                 ],
@@ -141,15 +110,60 @@ class HandbookDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-      );
+    );
   }
 
+  /// 🔁 Renders a content block (text, image, video placeholder)
+  Widget _buildContentBlock(HandbookContent block) {
+    switch (block.type) {
+      case ContentType.text:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(
+            block.data,
+            style: const TextStyle(fontSize: 16, height: 1.6),
+          ),
+        );
+
+      case ContentType.image:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              block.data,
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+
+      case ContentType.video:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Container(
+            height: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.black12,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Center(
+              child: Icon(Icons.play_circle_outline, size: 64, color: Colors.black45),
+            ),
+          ),
+        );
+    }
+  }
+
+  /// 🔖 Tag widget builder
   Widget _buildTag(String tag, ThemeData theme) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
-        color: theme.primaryColor.withOpacity(0.08), // subtle background tint
+        color: theme.primaryColor.withOpacity(0.08),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: theme.primaryColor.withOpacity(0.4),
@@ -163,7 +177,7 @@ class HandbookDetailScreen extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             tag,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black87,
               fontWeight: FontWeight.w500,
               fontSize: 13,

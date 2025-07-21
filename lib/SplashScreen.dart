@@ -9,7 +9,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   late AnimationController _logoController;
   late Animation<double> _logoAnimation;
 
@@ -76,14 +77,29 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     const SizedBox(height: 20),
                     FadeTransition(
                       opacity: _fadeAnimation,
-                      child: Text(
-                        'ROOSTER'.tr,
-                        style: TextStyle(
-                          fontSize: 34,
-                          fontWeight: FontWeight.bold,
-                          color: theme.primaryColor, // 🔴 Red from your theme
-                          letterSpacing: 3,
-                        ),
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.center, // or center as needed
+                        children: [
+                          Text(
+                            'Rooster'.tr,
+                            style: TextStyle(
+                              fontSize: 34,
+                              fontWeight: FontWeight.bold,
+                              color: theme.primaryColor,
+                              letterSpacing: 3,
+                            ),
+                          ),
+                          Text(
+                            'Handbuch'.tr,
+                            style: TextStyle(
+                              fontSize: 34,
+                              fontWeight: FontWeight.bold,
+                              color: theme.primaryColor,
+                              letterSpacing: 3,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -100,7 +116,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                   strokeWidth: 2.5,
                 ),
                 const SizedBox(height: 16),
-       
               ],
             ),
           ),
