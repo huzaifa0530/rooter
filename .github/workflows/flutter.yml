@@ -44,5 +44,5 @@ jobs:
       - name: Build Android APK
         run: flutter build apk --release
 
-      - name: Build iOS App
-        run: flutter build ios --release
+      #- name: Build iOS App
+      #  run: flutter build ios --release
