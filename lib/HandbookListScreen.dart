@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooster/Controllers/HandbookController.dart';
 import 'package:rooster/HandbookDetailScreen.dart';
-import 'package:rooster/Models/Handbook.dart';
+
 import 'package:rooster/widgets/custom_bottom_nav.dart';
 
 class HandbookListScreen extends StatelessWidget {

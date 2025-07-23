@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:rooster/Models/NewsModel.dart';
+
 import 'package:rooster/NewsDetailScreen.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 import 'package:rooster/Controllers/NewsController.dart'; // Make sure this path is correct

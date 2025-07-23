@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/PdfViewerScreen.dart';
-import 'package:rooster/widgets/custom_bottom_nav.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:video_player/video_player.dart';
+
 import 'package:chewie/chewie.dart';
 import 'package:get/get.dart';
 import 'package:rooster/controllers/lecture_controller.dart';

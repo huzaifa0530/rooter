@@ -4,7 +4,7 @@ import 'package:rooster/CourseViewScreen.dart';
 import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/controllers/course_controller.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
-import 'package:rooster/widgets/custom_bottom_nav.dart';
+
 
 class CourseListScreen extends StatelessWidget {
   const CourseListScreen({super.key});
@@ -93,7 +93,7 @@ class CourseListScreen extends StatelessWidget {
         itemCount: courses.length,
         itemBuilder: (_, i) {
           final course = courses[i];
-          final isPopular = course.rating > 4.8;
+          // final isPopular = course.rating > 4.8;
           final progress = controller.getProgress(course.title);
 
           return InkWell(

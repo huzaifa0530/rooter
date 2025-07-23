@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rooster/ContactScreen.dart';
+
 import 'package:rooster/Controllers/NewsController.dart';
 import 'package:rooster/CourseListScreen.dart';
 import 'package:rooster/HandbookListScreen.dart';
-import 'package:rooster/LoginScreen.dart';
+
 import 'package:rooster/NewsListScreen.dart';
-import 'package:rooster/ProfileScreen.dart';
+
 import 'package:rooster/Widgets/custom_drawer.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
-import 'package:rooster/widgets/custom_bottom_nav.dart';
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
