@@ -13,12 +13,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
-
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -28,13 +28,18 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Remove invalid JVM flag in CI
+        run: |
+          sed -i.bak '/-Xlint:-options/d' android/gradle.properties
+
       - name: Run Flutter Analyze
         run: flutter analyze || true
 
- #     - name: Run Tests
-  #      run: flutter test
+#     - name: Run Tests
+#       run: flutter test
+
       - name: Override Gradle JVM options (CI only)
-        run: echo "org.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError" >> gradle.properties
+        run: echo "org.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError" >> android/gradle.properties
 
       - name: Build Android APK
         run: flutter build apk --release
