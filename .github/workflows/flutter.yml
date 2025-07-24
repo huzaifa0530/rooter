@@ -43,9 +43,8 @@ jobs:
       # ✅ Correctly place google_play_key.json
       - name: Write google_play_key.json safely
         run: |
-          mkdir -p android
-          echo "${{ secrets.GOOGLE_PLAY_KEY }}" > android/google_play_key.json
-          cat android/google_play_key.json  # Remove after verifying it's valid JSON
+         echo "${{ secrets.GOOGLE_PLAY_KEY }}" | base64 --decode > android/google_play_key.json
+
 
       - name: Install Fastlane
         run: sudo gem install fastlane -NV
