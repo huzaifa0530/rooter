@@ -17,13 +17,11 @@ default_platform(:android)
 platform :android do
   desc "Build AAB and upload to Google Play"
   lane :release do
-    # Build app bundle (AAB)
     sh("flutter build appbundle --release")
 
-    # Upload to Google Play
-    upload_to_play_console(
-      json_key: "google_play_key.json", # Created from GitHub Secret
-      package_name: "com.example.rooster",
+    supply(
+      json_key: "google_play_key.json",
+      package_name: "com.example.rooster",  # Replace with your actual package name
       aab: "build/app/outputs/bundle/release/app-release.aab"
     )
   end
