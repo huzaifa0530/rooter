@@ -22,7 +22,7 @@ platform :android do
     supply(
       json_key: "google_play_key.json",
       package_name: "com.example.rooster",  # Replace with your actual package name
-      aab: "build/app/outputs/bundle/release/app-release.aab"
+      aab: "build/app/outputs/bundle/release/app-release.aab",
       skip_upload_apk: true,
       skip_upload_metadata: false,
       skip_upload_images: true,
