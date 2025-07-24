@@ -47,14 +47,14 @@ jobs:
 
       # 🔐 Setup Google Play JSON from GitHub Secret
       - name: Create JSON Key
-        run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" > android/google_play_key.json
+        run: echo "${{ secrets.GOOGLE_PLAY_KEY }}" > android/google_play_key.json
 
       - name: Install Fastlane
         run: sudo gem install fastlane -NV
 
       - name: Debug - List Files
         run: ls -la android
-        
+
       - name: Upload to Google Play
         working-directory: android
         run: fastlane release
