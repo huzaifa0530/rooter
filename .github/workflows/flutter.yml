@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI/CD with Fastlane
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest   # Needed for iOS builds
+    runs-on: macos-latest   # Needed for iOS builds and Fastlane
 
     steps:
       - name: Checkout code
@@ -29,20 +29,28 @@ jobs:
         run: flutter pub get
 
       - name: Remove invalid JVM flag in CI
-        run: |
-          sed -i.bak '/-Xlint:-options/d' android/gradle.properties
+        run: sed -i.bak '/-Xlint:-options/d' android/gradle.properties
 
-      - name: Run Flutter Analyze
+      - name: Flutter Analyze
         run: flutter analyze || true
-
-#     - name: Run Tests
-#       run: flutter test
 
       - name: Override Gradle JVM options (CI only)
         run: echo "org.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError" >> android/gradle.properties
 
-      - name: Build Android APK
-        run: flutter build apk --release
+      # Optional: Run tests (uncomment if needed)
+      # - name: Run Tests
+      #   run: flutter test
 
-      #- name: Build iOS App
-      #  run: flutter build ios --release
+      # 🔨 Build Android AAB (recommended for Play Store)
+      - name: Build AAB
+        run: flutter build appbundle --release
+
+      # 🔐 Setup Google Play JSON from GitHub Secret
+      - name: Create JSON Key
+        run: echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" > google_play_key.json
+
+      - name: Install Fastlane
+        run: sudo gem install fastlane -NV
+
+      - name: Upload to Google Play
+        run: fastlane release
