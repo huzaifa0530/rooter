@@ -69,7 +69,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
           _buildContentTab(course, theme),
           _buildResourcesTab(course.resources, theme),
         ],
-      ),  
+      ),
     );
   }
 
@@ -81,7 +81,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(14),
-            child: Image.asset(course.thumbnailPath,
+            child: Image.network(course.thumbnailPath,
                 height: 180, width: double.infinity, fit: BoxFit.cover),
           ),
           const SizedBox(height: 16),

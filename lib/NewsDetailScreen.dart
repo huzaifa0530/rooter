@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import '../Models/NewsModel.dart';
 
 class NewsDetailScreen extends StatelessWidget {
   final NewsModel news;
 
   const NewsDetailScreen({super.key, required this.news});
+Future<NewsModel> fetchNewsDetail() async {
+  final String url = 'https://test.rubicstechnology.com/api/news/${news.id}'; // Replace with actual API URL
+
+  try {
+    final response = await http.get(Uri.parse(url));
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      return NewsModel.fromJson(jsonData['data']);
+    } else {
+      throw Exception('Failed to load news detail. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Fetch error: $e');  // ⬅️ See exact error
+    rethrow;
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -17,170 +39,161 @@ class NewsDetailScreen extends StatelessWidget {
         backgroundColor: theme.primaryColor,
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // 🖼️ Header Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.asset(
-                news.imagePath,
-                fit: BoxFit.cover,
-                height: 220,
-                width: double.infinity,
-              ),
-            ),
-            const SizedBox(height: 20),
+        child: FutureBuilder<NewsModel>(
+          future: fetchNewsDetail(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-            // 📰 Title
-            Text(
-              news.title,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
+            if (snapshot.hasError || !snapshot.hasData) {
+              return const Center(child: Text('Failed to load news'));
+            }
 
-            // 📝 Short description
-            Text(
-              news.description,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 8),
+            final updatedNews = snapshot.data!;
 
-            // 📅 Date
-            Row(
+            return ListView(
+              padding: const EdgeInsets.all(16),
               children: [
-                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                const SizedBox(width: 6),
+                // 🖼️ Header Image
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: Image.network( // ✅ Use network image for dynamic content
+                    updatedNews.imagePath,
+                    fit: BoxFit.cover,
+                    height: 220,
+                    width: double.infinity,
+                    errorBuilder: (_, __, ___) => Image.asset('assets/images/no_image.jpg'),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // 📰 Title
                 Text(
-                  DateFormat.yMMMMd().format(news.publishedAt),
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  updatedNews.title,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // 📝 Short description
+                Text(
+                  updatedNews.description,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // 📅 Date
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                    const SizedBox(width: 6),
+                    Text(
+                      DateFormat.yMMMMd().format(updatedNews.publishedAt),
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // 🏷️ Tags/Chips
+                Wrap(
+                  spacing: 8,
+                  children: updatedNews.tags.map((tag) => _buildChip(tag, theme)).toList(),
+                ),
+
+                const SizedBox(height: 24),
+
+                // 📦 Content Blocks (Image/Video + description)
+                ..._buildContentBlocks(updatedNews.contentBlocks),
+
+                const SizedBox(height: 30),
+
+                // 💡 Footer
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: const [
+                      Text(
+                        'Did you enjoy this update?',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        'Share it with your friends or visit your nearest ROOSTER location today!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-                   const SizedBox(height: 16),
-
-            // 🏷️ Tags/Chips
-            Wrap(
-              spacing: 8,
-              children: [
-                _buildChip('ROOSTER Update', theme),
-                _buildChip('Food Offers', theme),
-                _buildChip('Branch News', theme),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // 📦 Content Blocks (Image/Video + description)
-            ..._buildContentBlocks(news.contentBlocks),
-
-            const SizedBox(height: 30),
-
-            // 💡 Footer
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: const [
-                  Text(
-                    'Did you enjoy this update?',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    'Share it with your friends or visit your nearest ROOSTER location today!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
   }
-
-  List<Widget> _buildContentBlocks(List<NewsContent> blocks) {
-    final List<Widget> widgets = [];
-    int i = 0;
-
-    while (i < blocks.length) {
-      final block = blocks[i];
-
-      if (block.type == ContentType.image || block.type == ContentType.video) {
-        // Media
-        widgets.add(
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: block.type == ContentType.image
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      block.data,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '🎥 Video Preview',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          'assets/images/no_image.jpg',
-                          height: 180,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        'Video: ${block.data.split('/').last}',
-                        style: const TextStyle(fontSize: 14, color: Colors.black54),
-                      ),
-                    ],
-                  ),
-          ),
-        );
-
-        // description after media
-        if (i + 1 < blocks.length && blocks[i + 1].type == ContentType.text) {
-          widgets.add(
-            Padding(
-              padding: const EdgeInsets.only(bottom: 24, top: 4),
-              child: Text(
-                blocks[i + 1].data,
-                style: const TextStyle(fontSize: 16, height: 1.6),
+List<Widget> _buildContentBlocks(List<NewsContent> blocks) {
+  return blocks.map((block) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (block.type == ContentType.image) ...[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                block.mediaPath,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Image.asset('assets/images/no_image.jpg'),
               ),
             ),
-          );
-          i += 2; // Skip media + its description
-        } else {
-          i++; // Skip media only
-        }
-      } else {
-        // Skip loose text blocks
-        i++;
-      }
-    }
+            const SizedBox(height: 8),
+          ] else if (block.type == ContentType.video) ...[
+            const Text(
+              '🎥 Video Preview',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                'assets/images/no_image.jpg', // Replace with actual video thumbnail if available
+                height: 180,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Video: ${block.mediaPath.split('/').last}',
+              style: const TextStyle(fontSize: 14, color: Colors.black54),
+            ),
+            const SizedBox(height: 8),
+          ],
+          Text(
+            block.description,
+            style: const TextStyle(fontSize: 16, height: 1.6),
+          ),
+        ],
+      ),
+    );
+  }).toList();
+}
 
-    return widgets;
-  }
+
   Widget _buildChip(String label, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),

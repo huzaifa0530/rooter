@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:rooster/Controllers/NewsController.dart';
+import 'package:rooster/Controllers/HomeController.dart';
 import 'package:rooster/CourseListScreen.dart';
 import 'package:rooster/HandbookListScreen.dart';
-
 import 'package:rooster/NewsListScreen.dart';
 
 import 'package:rooster/Widgets/custom_drawer.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
-
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,56 +15,60 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final homeController = Get.put(HomeController());
 
     return MainScaffold(
       title: 'home',
       currentIndex: 0,
       drawer: const CustomDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            Text(
-              'welcome_line'.tr,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
+      body: Obx(() {
+        if (homeController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              Text(
+                'welcome_line'.tr,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
+                ),
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'slogan'.tr,
-              style: const TextStyle(fontSize: 14, color: Colors.black87),
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 4),
+              Text(
+                'slogan'.tr,
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
+              ),
+              const SizedBox(height: 24),
 
-            // 📰 News section
-            NewsSection(
-              context,
-              title: 'Latest News',
-              icon: Icons.article_outlined,
-              items: [],
-              news: true,
-            ),
+              // 📰 News section
+              NewsSection(
+                context,
+                title: 'Latest News',
+                icon: Icons.article_outlined,
+                items: [],
+                news: true,
+                newsList: homeController.newsList,
+              ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // 🍽️ Course section
-            buildSection(
-              context,
-              title: 'latest_courses'.tr,
-              icon: Icons.restaurant_menu_outlined,
-              items: [
-                'Spicy Grilled Chicken',
-                'Creamy Mushroom Pasta',
-                'Lemon Herb Fish Fillet',
-              ],
-              news: false,
-            ),
-          ],
-        ),
-      ),
+              // 🍽️ Course section
+              buildSection(
+                context,
+                title: 'latest_courses'.tr,
+                icon: Icons.restaurant_menu_outlined,
+                items: homeController.courseList.map((e) => e.title).toList(),
+                news: false,
+              ),
+            ],
+          ),
+        );
+      }),
 
       // 📘 Floating Handbook button
       floatingActionButton: FloatingActionButton.extended(
@@ -78,8 +80,6 @@ class HomeScreen extends StatelessWidget {
         label: Text('handbook'.tr),
         icon: const Icon(Icons.menu_book_outlined),
       ),
-
-
     );
   }
 
@@ -106,8 +106,8 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   title,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w600),
+                  style:
+                      const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -188,9 +188,9 @@ class HomeScreen extends StatelessWidget {
     required IconData icon,
     required List<String> items,
     required bool news,
+    required List newsList,
   }) {
     final theme = Theme.of(context);
-    final newsController = Get.put(NewsController());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,8 +204,8 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   title,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w600),
+                  style:
+                      const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -221,72 +221,74 @@ class HomeScreen extends StatelessWidget {
         if (news)
           SizedBox(
             height: 180,
-            child: Obx(
-              () => ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: newsController.newsList.length,
-                itemBuilder: (context, index) {
-                  final news = newsController.newsList[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Get.to(() => const NewsListScreen());
-                    },
-                    child: Container(
-                      width: 140,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(14),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(14)),
-                            child: Image.asset(
-                              news.imagePath,
-                              height: 90,
-                              width: 140,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  news.title,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${news.publishedAt.day}/${news.publishedAt.month}/${news.publishedAt.year}',
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: newsList.length,
+              itemBuilder: (context, index) {
+                final newsItem = newsList[index];
+                ImageProvider imageProvider = newsItem.imagePath.startsWith('http')
+                    ? NetworkImage(newsItem.imagePath)
+                    : AssetImage(newsItem.imagePath) as ImageProvider;
+
+                return GestureDetector(
+                  onTap: () {
+                    Get.to(() => const NewsListScreen());
+                  },
+                  child: Container(
+                    width: 140,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius:
+                              const BorderRadius.vertical(top: Radius.circular(14)),
+                          child: Image(
+                            image: imageProvider,
+                            height: 90,
+                            width: 140,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                newsItem.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${newsItem.publishedAt.day}/${newsItem.publishedAt.month}/${newsItem.publishedAt.year}',
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
       ],

@@ -3,9 +3,12 @@ import 'package:get/get.dart';
 import 'package:rooster/Controllers/user_controller.dart';
 import 'package:rooster/translations.dart';
 import 'package:rooster/SplashScreen.dart';
+import 'package:rooster/HomeScreen.dart';
+import 'package:rooster/Controllers/course_controller.dart';
 
 void main() {
-  Get.put(UserController());
+  WidgetsFlutterBinding.ensureInitialized(); // Make sure Flutter is ready
+  Get.put(CourseController());
   runApp(const RoosterApp());
 }
 
@@ -52,7 +55,7 @@ class RoosterApp extends StatelessWidget {
       locale: const Locale('en', 'US'),
       fallbackLocale: const Locale('en', 'US'),
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
+      home: const HomeScreen(),
     );
   }
 }

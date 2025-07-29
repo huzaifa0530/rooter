@@ -38,7 +38,8 @@ class NewsListScreen extends StatelessWidget {
                   itemCount: controller.newsList.length,
                   itemBuilder: (context, index) {
                     final news = controller.newsList[index];
-                    final isRecent = DateTime.now().difference(news.publishedAt).inDays <= 3;
+                    final isRecent =
+                        DateTime.now().difference(news.publishedAt).inDays <= 3;
 
                     return Card(
                       color: Colors.white,
@@ -58,8 +59,8 @@ class NewsListScreen extends StatelessWidget {
                               borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(14),
                               ),
-                              child: Image.asset(
-                                news.imagePath,
+                              child: Image.network(
+                                'https://test.rubicstechnology.com/${news.imagePath}',
                                 height: 180,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
@@ -87,7 +88,8 @@ class NewsListScreen extends StatelessWidget {
                                               horizontal: 8, vertical: 4),
                                           decoration: BoxDecoration(
                                             color: theme.primaryColor,
-                                            borderRadius: BorderRadius.circular(20),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: Text(
                                             'new'.tr,
@@ -110,10 +112,12 @@ class NewsListScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        DateFormat.yMMMMd().format(news.publishedAt),
+                                        DateFormat.yMMMMd()
+                                            .format(news.publishedAt),
                                         style: const TextStyle(
                                           fontSize: 12,
                                           color: Colors.black45,
@@ -122,11 +126,13 @@ class NewsListScreen extends StatelessWidget {
                                       TextButton(
                                         style: TextButton.styleFrom(
                                           foregroundColor: theme.primaryColor,
-                                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
                                         ),
-                                        onPressed: () =>
-                                            Get.to(() => NewsDetailScreen(news: news)),
+                                        onPressed: () => Get.to(
+                                            () => NewsDetailScreen(news: news)),
                                         child: Text('read_more'.tr),
                                       ),
                                     ],

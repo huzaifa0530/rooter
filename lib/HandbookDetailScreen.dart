@@ -25,7 +25,8 @@ class HandbookDetailScreen extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 height: 200,
-                child: handbook.thumbnailUrl.startsWith('http')
+                child: handbook.thumbnailUrl.isNotEmpty &&
+                        handbook.thumbnailUrl.startsWith('http')
                     ? Image.network(
                         handbook.thumbnailUrl,
                         fit: BoxFit.cover,
@@ -35,7 +36,7 @@ class HandbookDetailScreen extends StatelessWidget {
                         ),
                       )
                     : Image.asset(
-                        handbook.thumbnailUrl,
+                        'assets/images/no_image.jpg',
                         fit: BoxFit.cover,
                       ),
               ),
@@ -56,55 +57,51 @@ class HandbookDetailScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // 🔁 Dynamic Content Blocks
-            ...handbook.contentBlocks.map((block) => _buildContentBlock(block)),
+            // 🔁 Dynamic Content Blocks sorted by position
+            ...handbook.contentBlocks.sortedByPosition().map((block) => _buildContentBlock(block)),
 
             const SizedBox(height: 24),
 
-            // 📌 Tags
+            // 📌 Dynamic Tags
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: [
-                _buildTag('Fried Chicken', theme),
-                _buildTag('Kitchen Safety', theme),
-                _buildTag('Tips', theme),
-                _buildTag('Recipe', theme),
-              ],
+              children: handbook.tags.map((tag) => _buildTag(tag, theme)).toList(),
             ),
 
             const SizedBox(height: 30),
 
             // 🧑‍🍳 Chef's Note
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: theme.primaryColor.withOpacity(0.2)),
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.tips_and_updates_outlined,
-                      color: Colors.orange, size: 32),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Chef’s Tip: Always let your chicken rest for 5 minutes after frying to keep it juicy and crispy!',
-                      style: const TextStyle(color: Colors.black87, fontSize: 14),
+            if (handbook.chefTip != null && handbook.chefTip!.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: theme.primaryColor.withOpacity(0.2)),
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
                     ),
-                  )
-                ],
+                  ],
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.tips_and_updates_outlined,
+                        color: Colors.orange, size: 32),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        handbook.chefTip!,
+                        style: const TextStyle(color: Colors.black87, fontSize: 14),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
 
             const SizedBox(height: 40),
           ],
@@ -130,11 +127,17 @@ class HandbookDetailScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              block.data,
+            child: Image.network(
+              'https://test.rubicstechnology.com/${block.data}',
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Image.asset(
+                'assets/images/no_image.jpg',
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         );
@@ -186,5 +189,14 @@ class HandbookDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// 📦 Extension to sort content blocks by position
+extension SortHandbookContent on List<HandbookContent> {
+  List<HandbookContent> sortedByPosition() {
+    List<HandbookContent> sortedList = [...this];
+    sortedList.sort((a, b) => a.position.compareTo(b.position));
+    return sortedList;
   }
 }
