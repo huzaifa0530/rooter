@@ -32,7 +32,7 @@ class CourseModel {
           lectures = (sectionJson['lectures'] as List).map((lectureJson) {
             return LectureModel(
               title: lectureJson['title'] ?? '',
-              videoUrl: 'https://test.rubicstechnology.com/${lectureJson['video_path'] ?? ''}',
+              videoPath: lectureJson['path'] ?? '',
             );
           }).toList();
         }
@@ -48,17 +48,15 @@ class CourseModel {
       parsedResources = (json['resources'] as List)
           .map((res) => res['file_path'] ?? '')
           .where((path) => path.isNotEmpty)
-          .map((path) => 'https://test.rubicstechnology.com/$path')
-          .toList();
+          .toList()
+          .cast<String>();
     }
 
     return CourseModel(
       id: json['id'], // ✅ Parse the ID here
       title: json['title'] ?? '',
       description: json['description'] ?? '',
-      thumbnailPath: json['thumbnail_path'] != null
-          ? 'https://test.rubicstechnology.com/${json['thumbnail_path']}'
-          : 'https://via.placeholder.com/300x200.png?text=No+Image',
+      thumbnailPath: json['thumbnail_path'] ?? '',
       instructor: json['instructor'] ?? '',
       duration: json['duration'] ?? '',
       rating: (json['rating'] ?? 0).toDouble(),
@@ -69,7 +67,6 @@ class CourseModel {
   }
 }
 
-
 class SectionModel {
   final String title;
   final List<LectureModel> lectures;
@@ -79,14 +76,21 @@ class SectionModel {
 
 class LectureModel {
   final String title;
-  final String videoUrl;
+  final String videoPath; // Store raw path here
   final bool isDownloaded;
   bool isViewed;
 
   LectureModel({
     required this.title,
-    required this.videoUrl,
+    required this.videoPath,
     this.isDownloaded = false,
     this.isViewed = false,
   });
+
+  String get videoUrl {
+    final parts = videoPath.split('/');
+    final filename = Uri.encodeComponent(parts.last);
+    final directory = parts.sublist(0, parts.length - 1).join('/');
+    return 'https://test.rubicstechnology.com/storage/app/public/$directory/$filename';
+  }
 }

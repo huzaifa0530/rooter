@@ -34,117 +34,125 @@ class NewsListScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: Obx(() {
-                return ListView.builder(
-                  itemCount: controller.newsList.length,
-                  itemBuilder: (context, index) {
-                    final news = controller.newsList[index];
-                    final isRecent =
-                        DateTime.now().difference(news.publishedAt).inDays <= 3;
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await controller.fetchNewsList();
+                  },
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: controller.newsList.length,
+                    itemBuilder: (context, index) {
+                      final news = controller.newsList[index];
+                      final isRecent =
+                          DateTime.now().difference(news.publishedAt).inDays <=
+                              3;
 
-                    return Card(
-                      color: Colors.white,
-                      shadowColor: Colors.black.withOpacity(0.2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      elevation: 3,
-                      margin: const EdgeInsets.only(bottom: 16),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(14),
-                        onTap: () => Get.to(() => NewsDetailScreen(news: news)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(14),
+                      return Card(
+                        color: Colors.white,
+                        shadowColor: Colors.black.withOpacity(0.2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        elevation: 3,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(14),
+                          onTap: () =>
+                              Get.to(() => NewsDetailScreen(news: news)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(14),
+                                ),
+                                child: Image.network(
+                                  'https://test.rubicstechnology.com/storage/app/public/${news.imagePath}',
+                                  height: 180,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              child: Image.network(
-                                'https://test.rubicstechnology.com/${news.imagePath}',
-                                height: 180,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          news.title,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      if (isRecent)
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8, vertical: 4),
-                                          decoration: BoxDecoration(
-                                            color: theme.primaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
+                              Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
                                           child: Text(
-                                            'new'.tr,
+                                            news.title,
                                             style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    news.shortDescription,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black87,
+                                        if (isRecent)
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: theme.primaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Text(
+                                              'new'.tr,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        DateFormat.yMMMMd()
-                                            .format(news.publishedAt),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black45,
-                                        ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      news.shortDescription,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black87,
                                       ),
-                                      TextButton(
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: theme.primaryColor,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          tapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          DateFormat.yMMMMd()
+                                              .format(news.publishedAt),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black45,
+                                          ),
                                         ),
-                                        onPressed: () => Get.to(
-                                            () => NewsDetailScreen(news: news)),
-                                        child: Text('read_more'.tr),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: theme.primaryColor,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
+                                          ),
+                                          onPressed: () => Get.to(() =>
+                                              NewsDetailScreen(news: news)),
+                                          child: Text('read_more'.tr),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 );
               }),
             ),

@@ -9,6 +9,8 @@ import 'package:rooster/Controllers/course_controller.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // Make sure Flutter is ready
   Get.put(CourseController());
+  Get.put(UserController());
+
   runApp(const RoosterApp());
 }
 
@@ -55,7 +57,7 @@ class RoosterApp extends StatelessWidget {
       locale: const Locale('en', 'US'),
       fallbackLocale: const Locale('en', 'US'),
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }

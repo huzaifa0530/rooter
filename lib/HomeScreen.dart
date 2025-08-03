@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 
 import 'package:rooster/Controllers/HomeController.dart';
 import 'package:rooster/CourseListScreen.dart';
+import 'package:rooster/CourseViewScreen.dart';
 import 'package:rooster/HandbookListScreen.dart';
+import 'package:rooster/Models/CourseModel.dart';
+import 'package:rooster/NewsDetailScreen.dart';
 import 'package:rooster/NewsListScreen.dart';
 
 import 'package:rooster/Widgets/custom_drawer.dart';
@@ -26,9 +29,14 @@ class HomeScreen extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
+        return RefreshIndicator(
+          onRefresh: () async {
+            await homeController.fetchHomeData();
+          },
           child: ListView(
+            physics:
+                const AlwaysScrollableScrollPhysics(), // required for pull-to-refresh
+            padding: const EdgeInsets.all(16.0),
             children: [
               Text(
                 'welcome_line'.tr,
@@ -60,9 +68,10 @@ class HomeScreen extends StatelessWidget {
               // 🍽️ Course section
               buildSection(
                 context,
+                homeController: homeController,
                 title: 'latest_courses'.tr,
                 icon: Icons.restaurant_menu_outlined,
-                items: homeController.courseList.map((e) => e.title).toList(),
+                items: homeController.courseList,
                 news: false,
               ),
             ],
@@ -86,9 +95,10 @@ class HomeScreen extends StatelessWidget {
   // 🧩 Reusable Course or News Section
   Widget buildSection(
     BuildContext context, {
+    required HomeController homeController,
     required String title,
     required IconData icon,
-    required List<String> items,
+    required List<CourseModel> items,
     required bool news,
   }) {
     final theme = Theme.of(context);
@@ -106,8 +116,8 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   title,
-                  style:
-                      const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -116,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                 if (news) {
                   Get.to(() => const NewsListScreen());
                 } else {
-                  Get.to(() => const CourseListScreen());
+                  Get.to(() => CourseListScreen());
                 }
               },
               child: const Text("View All"),
@@ -142,7 +152,7 @@ class HomeScreen extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 leading: Icon(icon, color: theme.colorScheme.primary),
                 title: Text(
-                  item,
+                  item.title,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Column(
@@ -172,7 +182,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
-                  Get.to(() => const CourseListScreen());
+                  Get.to(() => CourseViewScreen(course: item));
                 },
               ),
             );
@@ -204,8 +214,8 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   title,
-                  style:
-                      const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -226,13 +236,13 @@ class HomeScreen extends StatelessWidget {
               itemCount: newsList.length,
               itemBuilder: (context, index) {
                 final newsItem = newsList[index];
-                ImageProvider imageProvider = newsItem.imagePath.startsWith('http')
-                    ? NetworkImage(newsItem.imagePath)
-                    : AssetImage(newsItem.imagePath) as ImageProvider;
+                String fullImageUrl = newsItem.imagePath.startsWith('http')
+                    ? newsItem.imagePath
+                    : 'https://test.rubicstechnology.com/storage/app/public/${newsItem.imagePath}';
 
                 return GestureDetector(
                   onTap: () {
-                    Get.to(() => const NewsListScreen());
+                    Get.to(() => NewsDetailScreen(news: newsItem));
                   },
                   child: Container(
                     width: 140,
@@ -252,10 +262,10 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ClipRRect(
-                          borderRadius:
-                              const BorderRadius.vertical(top: Radius.circular(14)),
-                          child: Image(
-                            image: imageProvider,
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(14)),
+                          child: Image.network(
+                            fullImageUrl,
                             height: 90,
                             width: 140,
                             fit: BoxFit.cover,

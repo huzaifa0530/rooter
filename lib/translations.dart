@@ -55,6 +55,7 @@ class AppTranslations extends Translations {
           'business_type': 'Business Type',
           'courses': 'Courses',
           'news': 'News',
+          'tap_lecture': 'Tap a lecture to begin watching.',
         },
         'de_DE': {
           'ROOSTER': 'ROOSTER',
@@ -107,6 +108,8 @@ class AppTranslations extends Translations {
           'business_type': 'Geschäftstyp',
           'courses': 'Kurse',
           'news': 'Nachrichten',
+          'tap_lecture':
+              'Tippen Sie auf eine Lektion, um das Ansehen zu starten.',
         },
       };
 }

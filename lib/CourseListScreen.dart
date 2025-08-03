@@ -23,96 +23,102 @@ class CourseListScreen extends StatelessWidget {
 
         final courses = controller.courses;
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: courses.length,
-          itemBuilder: (_, i) {
-            final course = courses[i];
-            final progress = controller.getProgress(course.title);
+        return RefreshIndicator(
+          onRefresh: () async {
+            await controller.fetchCourses();
+          },
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            itemCount: courses.length,
+            itemBuilder: (_, i) {
+              final course = courses[i];
+              final progress = controller.getProgress(course.title);
 
-            return InkWell(
-              onTap: () async {
-             final courseController = Get.find<CourseController>(); 
-                await courseController
-                    .fetchCourseDetail(course.id); // get full data
+              return InkWell(
+                onTap: () async {
+                  final courseController = Get.find<CourseController>();
+                  await courseController.fetchCourseDetail(course.id);
 
-                if (courseController.selectedCourse.value != null) {
-                  Get.to(() => CourseViewScreen(
-                      course: courseController.selectedCourse.value!));
-                }
-              },
-              child: Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14)),
-                margin: const EdgeInsets.only(bottom: 20),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          course.thumbnailPath,
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) =>
-                              const Icon(Icons.image_not_supported),
+                  if (courseController.selectedCourse.value != null) {
+                    Get.to(() => CourseViewScreen(
+                        course: courseController.selectedCourse.value!));
+                  }
+                },
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            'https://test.rubicstechnology.com/storage/app/public/${course.thumbnailPath}',
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                const Icon(Icons.image_not_supported),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(course.title,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600)),
-                            const SizedBox(height: 6),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.timer,
-                                    size: 14, color: Colors.grey[700]),
-                                const SizedBox(width: 2),
-                                Text(course.duration,
-                                    style: const TextStyle(fontSize: 13)),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: LinearProgressIndicator(
-                                value: progress / 100,
-                                minHeight: 8,
-                                backgroundColor: Colors.grey.shade300,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  theme.colorScheme.primary,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(course.title,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 6),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.timer,
+                                      size: 14, color: Colors.grey[700]),
+                                  const SizedBox(width: 2),
+                                  Text(course.duration,
+                                      style: const TextStyle(fontSize: 13)),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: LinearProgressIndicator(
+                                  value: progress / 100,
+                                  minHeight: 8,
+                                  backgroundColor: Colors.grey.shade300,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    theme.colorScheme.primary,
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '$progress% completed',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade700,
+                              const SizedBox(height: 4),
+                              Text(
+                                '$progress% completed',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade700,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 6),
-                      const Icon(Icons.arrow_forward_ios_rounded,
-                          size: 16, color: Colors.grey),
-                    ],
+                        const SizedBox(width: 6),
+                        const Icon(Icons.arrow_forward_ios_rounded,
+                            size: 16, color: Colors.grey),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       }),
     );

@@ -14,7 +14,7 @@ class CourseController extends GetxController {
     super.onInit();
   }
 
-  void fetchCourses() async {
+  Future<void> fetchCourses() async {
     isLoading.value = true;
     try {
       final response = await http.get(

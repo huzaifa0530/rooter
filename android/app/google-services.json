@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "274306580161",
+    "project_id": "rooster-handbunch",
+    "storage_bucket": "rooster-handbunch.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:274306580161:android:286c66e806076749fbde40",
+        "android_client_info": {
+          "package_name": "com.example.rooster"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJPo4au6JoZTc3A71SxzDR5vT-Z1ZNujs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

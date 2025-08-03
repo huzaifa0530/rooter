@@ -13,25 +13,27 @@ class NewsController extends GetxController {
     super.onInit();
     fetchNewsList();
   }
+Future<void> fetchNewsList() async {
+  try {
+    final response = await http.get(Uri.parse('$baseUrl/news'));
 
-  void fetchNewsList() async {
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/news'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
-        if (data['status'] == true) {
-          newsList.value = List<NewsModel>.from(
-            data['data'].map((n) => NewsModel.fromJson(n)),
-          );
-        }
-      } else {
-        Get.snackbar('Error', 'Failed to load news list');
+      if (data['status'] == true) {
+        newsList.value = List<NewsModel>.from(
+          data['data'].map((n) => NewsModel.fromJson(n)),
+        );
       }
-    } catch (e) {
-      print(e);
-      Get.snackbar('Error', 'Something went wrong while fetching news');
+    } else {
+      Get.snackbar('Error', 'Failed to load news list');
     }
+  } catch (e) {
+    print(e);
+    Get.snackbar('Error', 'Something went wrong while fetching news');
   }
+}
+
+
+
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/PdfViewerScreen.dart';
-
 import 'package:chewie/chewie.dart';
 import 'package:get/get.dart';
 import 'package:rooster/controllers/lecture_controller.dart';
@@ -74,6 +73,23 @@ class _CourseViewScreenState extends State<CourseViewScreen>
   }
 
   Widget _buildOverviewTab(CourseModel course, ThemeData theme) {
+    String baseUrl = 'https://test.rubicstechnology.com/storage/app/public/';
+    String thumbnailPath = course.thumbnailPath.trim();
+    print('Raw thumbnailPath: $thumbnailPath');
+
+    String imageUrl;
+
+    if (thumbnailPath.toLowerCase().startsWith('http')) {
+      imageUrl = thumbnailPath;
+    } else {
+      final parts = thumbnailPath.split('/');
+      final filename = Uri.encodeComponent(parts.last);
+      final directory = parts.sublist(0, parts.length - 1).join('/');
+      imageUrl = '$baseUrl$directory/$filename';
+    }
+
+    print('Final imageUrl: $imageUrl');
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -81,8 +97,15 @@ class _CourseViewScreenState extends State<CourseViewScreen>
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(14),
-            child: Image.network(course.thumbnailPath,
-                height: 180, width: double.infinity, fit: BoxFit.cover),
+            child: Image.network(
+              imageUrl,
+              height: 180,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Text(
+                'err $imageUrl', // Correct Dart string interpolation
+              ),
+            ),
           ),
           const SizedBox(height: 16),
           Text(course.title,
@@ -94,17 +117,6 @@ class _CourseViewScreenState extends State<CourseViewScreen>
           const SizedBox(height: 4),
           Row(
             children: [
-              // const Icon(Icons.star, color: Colors.amber, size: 18),
-              // const SizedBox(width: 4),
-              // Text('${course.rating}', style: theme.textTheme.bodyMedium),
-              // const SizedBox(width: 16),
-              // const Icon(Icons.group, color: Colors.grey, size: 18),
-              // const SizedBox(width: 4),
-              // Text('${course.enrolled} ${'students'.tr}',
-              //     style: theme.textTheme.bodyMedium),
-              // const SizedBox(width: 16),
-              // const Icon(Icons.timer, color: Colors.grey, size: 18),
-              // const SizedBox(width: 4),
               Text(course.duration, style: theme.textTheme.bodyMedium),
             ],
           ),
@@ -157,9 +169,8 @@ class _CourseViewScreenState extends State<CourseViewScreen>
                 ],
               )
             else
-              const Center(
-                child: Text("Tap a lecture to begin watching.",
-                    style: TextStyle(fontSize: 16)),
+               Center(
+                child: Text("tap_lecture".tr, style: TextStyle(fontSize: 16)),
               ),
 
             // Lecture List
@@ -186,6 +197,13 @@ class _CourseViewScreenState extends State<CourseViewScreen>
   }
 
   Widget _buildResourcesTab(List<String> resources, ThemeData theme) {
+    String buildResourceUrl(String rawPath) {
+      final parts = rawPath.split('/');
+      final filename = Uri.encodeComponent(parts.last);
+      final directory = parts.sublist(0, parts.length - 1).join('/');
+      return 'https://test.rubicstechnology.com/storage/app/public/$directory/$filename';
+    }
+
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: resources.length,
@@ -197,7 +215,8 @@ class _CourseViewScreenState extends State<CourseViewScreen>
             Text(resources[i], maxLines: 1, overflow: TextOverflow.ellipsis),
         trailing: const Icon(Icons.download),
         onTap: () async {
-          Get.to(() => PdfViewerScreen(path: resources[i]));
+          final url = buildResourceUrl(resources[i]);
+          Get.to(() => PdfViewerScreen(path: url));
         },
       ),
     );
