@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:rooster/widgets/MainScaffold.dart';
 import 'dart:convert';
 import 'package:video_player/video_player.dart';
 
-import '../Models/NewsModel.dart';  // Assuming your model exists
+import '../Models/NewsModel.dart'; // Assuming your model exists
 
 class NewsDetailScreen extends StatelessWidget {
   final NewsModel news;
@@ -12,8 +13,7 @@ class NewsDetailScreen extends StatelessWidget {
   const NewsDetailScreen({super.key, required this.news});
 
   Future<NewsModel> fetchNewsDetail() async {
-    final String url =
-        'https://test.rubicstechnology.com/api/news/${news.id}';
+    final String url = 'https://test.rubicstechnology.com/api/news/${news.id}';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -37,11 +37,9 @@ class NewsDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ROOSTER'),
-        backgroundColor: theme.primaryColor,
-      ),
+    return MainScaffold(
+      title: 'Rooster',
+      currentIndex: null,
       body: SafeArea(
         child: FutureBuilder<NewsModel>(
           future: fetchNewsDetail(),
@@ -96,7 +94,8 @@ class NewsDetailScreen extends StatelessWidget {
                 // Date
                 Row(
                   children: [
-                    const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                    const Icon(Icons.calendar_today,
+                        size: 16, color: Colors.grey),
                     const SizedBox(width: 6),
                     Text(
                       DateFormat.yMMMMd().format(updatedNews.publishedAt),
@@ -138,7 +137,8 @@ class NewsDetailScreen extends StatelessWidget {
                         ] else if (block.type == ContentType.video) ...[
                           const Text(
                             '🎥 Video Preview',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 8),
                           ClipRRect(
@@ -177,7 +177,8 @@ class NewsDetailScreen extends StatelessWidget {
                     children: const [
                       Text(
                         'Did you enjoy this update?',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 6),
                       Text(
@@ -202,7 +203,8 @@ class NewsDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: theme.primaryColor.withOpacity(0.6), width: 1),
+        border:
+            Border.all(color: theme.primaryColor.withOpacity(0.6), width: 1),
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
         ],
@@ -211,7 +213,8 @@ class NewsDetailScreen extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.local_fire_department, size: 16, color: theme.primaryColor),
+          Icon(Icons.local_fire_department,
+              size: 16, color: theme.primaryColor),
           const SizedBox(width: 6),
           Text(
             label,

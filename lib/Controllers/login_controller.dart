@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rooster/Controllers/user_controller.dart';
+import 'package:rooster/main.dart';
 import '../HomeScreen.dart';
 import '../widgets/app_snackbar.dart';
 
@@ -45,17 +46,36 @@ class LoginController extends GetxController {
       if (response.statusCode == 200 && data['success'] == true) {
         await secureStorage.write(key: 'token', value: data['token']);
         await secureStorage.write(key: 'user', value: jsonEncode(data['user']));
+
         final userController = Get.find<UserController>();
         userController.setUser(data['user']['name'], data['user']['email']);
+
         AppSnackbar.show(
           title: "Login Success",
           message: data['message'] ?? 'Welcome!',
           type: SnackbarType.success,
         );
 
-        Future.delayed(const Duration(milliseconds: 1200), () {
-          Get.offAll(() => const HomeScreen());
-        });
+        // ✅ Handle redirect logic after login
+
+        print("📦 Pending notification args: $pendingNotificationArgs");
+        final args = pendingNotificationArgs;
+
+        if (args != null &&
+            args.containsKey('type') &&
+            args.containsKey('id')) {
+          print(
+              "🚀 Redirecting to detail with type: ${args['type']}, id: ${args['id']}");
+          pendingNotificationArgs = null;
+          Future.delayed(const Duration(milliseconds: 1200), () {
+            handleNotificationNavigation(args['type'], args['id']);
+          });
+        } else {
+          print("🏠 Redirecting to HomeScreen");
+          Future.delayed(const Duration(milliseconds: 1200), () {
+            Get.offAll(() => const HomeScreen());
+          });
+        }
       } else if (response.statusCode == 422) {
         // Laravel validation error (wrong password, etc.)
         AppSnackbar.show(

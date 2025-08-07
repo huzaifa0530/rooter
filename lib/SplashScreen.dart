@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rooster/LoginScreen.dart';
+import 'package:rooster/HomeScreen.dart'; // Import your home screen
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,14 +19,17 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
+
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 3), () {
-      Get.off(() => const LoginScreen());
-    });
+    _startAnimations();
+    _checkLoginStatus(); // Start token check
+  }
 
+  void _startAnimations() {
     _logoController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
@@ -44,6 +49,17 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
+  Future<void> _checkLoginStatus() async {
+    await Future.delayed(const Duration(seconds: 3)); // Splash delay
+    final token = await storage.read(key: 'token');
+
+    if (token != null && token.isNotEmpty) {
+      Get.off(() => const HomeScreen());
+    } else {
+      Get.off(() => const LoginScreen());
+    }
+  }
+
   @override
   void dispose() {
     _logoController.dispose();
@@ -56,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen>
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor, // ✅ white from your theme
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -78,8 +94,7 @@ class _SplashScreenState extends State<SplashScreen>
                     FadeTransition(
                       opacity: _fadeAnimation,
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.center, // or center as needed
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             'Rooster'.tr,
@@ -112,7 +127,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               children: [
                 CircularProgressIndicator(
-                  color: theme.primaryColor, // ✅ consistent red
+                  color: theme.primaryColor,
                   strokeWidth: 2.5,
                 ),
                 const SizedBox(height: 16),

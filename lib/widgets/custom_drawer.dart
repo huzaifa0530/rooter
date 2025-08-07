@@ -4,6 +4,7 @@ import 'package:rooster/Controllers/user_controller.dart'; // import your contro
 import 'package:rooster/ContactScreen.dart';
 import 'package:rooster/LoginScreen.dart';
 import 'package:rooster/ProfileScreen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -58,13 +59,40 @@ class CustomDrawer extends StatelessWidget {
                   context,
                   icon: Icons.logout_outlined,
                   label: 'logout'.tr,
-                  onTap: () => Get.offAll(() => const LoginScreen()),
+                  onTap: () => _confirmLogout(context),
                 ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _confirmLogout(BuildContext context) {
+    final theme = Theme.of(context);
+
+    Get.defaultDialog(
+      title: "Confirm Logout",
+      middleText: "Are you sure you want to logout?",
+      textConfirm: "Yes",
+      textCancel: "No",
+      confirmTextColor: Colors.white,
+      buttonColor: theme.primaryColor,
+      cancelTextColor: theme.primaryColor,
+      onConfirm: () async {
+        // Clear secure storage
+        final storage = FlutterSecureStorage(); // ✅ Correct, remove 'const'
+
+        await storage.delete(key: 'token');
+        await storage.delete(key: 'user');
+
+        // Optionally clear any controllers
+        final userController = Get.find<UserController>();
+        userController.clearUser();
+
+        Get.offAll(() => const LoginScreen());
+      },
     );
   }
 

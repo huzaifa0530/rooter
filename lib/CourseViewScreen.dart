@@ -4,6 +4,7 @@ import 'package:rooster/PdfViewerScreen.dart';
 import 'package:chewie/chewie.dart';
 import 'package:get/get.dart';
 import 'package:rooster/controllers/lecture_controller.dart';
+import 'package:rooster/widgets/MainScaffold.dart';
 
 class CourseViewScreen extends StatefulWidget {
   final CourseModel course;
@@ -36,11 +37,14 @@ class _CourseViewScreenState extends State<CourseViewScreen>
     final course = widget.course;
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
+    return MainScaffold(
+      title: 'latest_courses',
+      currentIndex: 1,
+      customAppBar: AppBar(
         title: const Text('ROOSTER'),
         backgroundColor: theme.primaryColor,
         bottom: TabBar(
+          // ← put your TabBar here
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
@@ -169,7 +173,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
                 ],
               )
             else
-               Center(
+              Center(
                 child: Text("tap_lecture".tr, style: TextStyle(fontSize: 16)),
               ),
 

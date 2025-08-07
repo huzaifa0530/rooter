@@ -55,4 +55,18 @@ class HandbookController extends GetxController {
     }
     return null;
   }
+
+  Future<Handbook?> fetchHandbookById(int id) async {
+    final url = 'https://test.rubicstechnology.com/api/handbooks/$id';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        return Handbook.fromJson(jsonData['data']);
+      }
+    } catch (e) {
+      print('Error fetching handbook: $e');
+    }
+    return null;
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rooster/Models/Handbook.dart';
+import 'package:rooster/widgets/MainScaffold.dart';
 import 'package:video_player/video_player.dart';
 
 class HandbookDetailScreen extends StatelessWidget {
@@ -9,13 +10,12 @@ class HandbookDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final imageUrl = 'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
+    final imageUrl =
+        'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('ROOSTER', style: TextStyle(fontWeight: FontWeight.bold)),
-      ),
+    return MainScaffold(
+      title: 'Rooster',
+      currentIndex: null,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -33,7 +33,8 @@ class HandbookDetailScreen extends StatelessWidget {
                   errorBuilder: (_, __, ___) => Container(
                     color: Colors.grey[100],
                     child: const Center(
-                      child: Icon(Icons.menu_book, size: 50, color: Colors.black45),
+                      child: Icon(Icons.menu_book,
+                          size: 50, color: Colors.black45),
                     ),
                   ),
                 ),
@@ -45,18 +46,22 @@ class HandbookDetailScreen extends StatelessWidget {
             // 🧾 Title & Description
             Text(
               handbook.title,
-              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               handbook.description,
-              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black87),
+              style:
+                  theme.textTheme.bodyMedium?.copyWith(color: Colors.black87),
             ),
 
             const SizedBox(height: 24),
 
             // 🔁 Dynamic Content Blocks
-            ...handbook.contentBlocks.sortedByPosition().map((block) => _buildContentBlock(block)),
+            ...handbook.contentBlocks
+                .sortedByPosition()
+                .map((block) => _buildContentBlock(block)),
 
             const SizedBox(height: 24),
 
@@ -64,7 +69,8 @@ class HandbookDetailScreen extends StatelessWidget {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: handbook.tags.map((tag) => _buildTag(tag, theme)).toList(),
+              children:
+                  handbook.tags.map((tag) => _buildTag(tag, theme)).toList(),
             ),
 
             const SizedBox(height: 30),
@@ -75,7 +81,8 @@ class HandbookDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: theme.primaryColor.withOpacity(0.2)),
+                  border:
+                      Border.all(color: theme.primaryColor.withOpacity(0.2)),
                   borderRadius: BorderRadius.circular(14),
                   boxShadow: const [
                     BoxShadow(
@@ -88,12 +95,14 @@ class HandbookDetailScreen extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.tips_and_updates_outlined, color: Colors.orange, size: 32),
+                    const Icon(Icons.tips_and_updates_outlined,
+                        color: Colors.orange, size: 32),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         handbook.chefTip!,
-                        style: const TextStyle(color: Colors.black87, fontSize: 14),
+                        style: const TextStyle(
+                            color: Colors.black87, fontSize: 14),
                       ),
                     )
                   ],
@@ -120,7 +129,8 @@ class HandbookDetailScreen extends StatelessWidget {
         );
 
       case ContentType.image:
-        final imageUrl = 'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(block.data)}';
+        final imageUrl =
+            'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(block.data)}';
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: ClipRRect(
@@ -141,7 +151,8 @@ class HandbookDetailScreen extends StatelessWidget {
         );
 
       case ContentType.video:
-        final videoUrl = 'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(block.data)}';
+        final videoUrl =
+            'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(block.data)}';
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: VideoBlockWidget(videoUrl: videoUrl),
@@ -157,7 +168,8 @@ class HandbookDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.primaryColor.withOpacity(0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.primaryColor.withOpacity(0.4), width: 1),
+        border:
+            Border.all(color: theme.primaryColor.withOpacity(0.4), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -166,7 +178,10 @@ class HandbookDetailScreen extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             tag,
-            style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w500, fontSize: 13),
+            style: const TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.w500,
+                fontSize: 13),
           ),
         ],
       ),
@@ -226,13 +241,17 @@ class _VideoBlockWidgetState extends State<VideoBlockWidget> {
                 Center(
                   child: IconButton(
                     icon: Icon(
-                      _controller.value.isPlaying ? Icons.pause_circle : Icons.play_circle,
+                      _controller.value.isPlaying
+                          ? Icons.pause_circle
+                          : Icons.play_circle,
                       size: 64,
                       color: Colors.white,
                     ),
                     onPressed: () {
                       setState(() {
-                        _controller.value.isPlaying ? _controller.pause() : _controller.play();
+                        _controller.value.isPlaying
+                            ? _controller.pause()
+                            : _controller.play();
                       });
                     },
                   ),

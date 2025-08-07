@@ -71,4 +71,19 @@ class CourseController extends GetxController {
   int getProgress(String courseTitle) {
     return 20; // fake progress for now
   }
+
+  Future<CourseModel?> fetchCourseById(int id) async {
+  final url = 'https://test.rubicstechnology.com/api/courses/$id';
+  try {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      return CourseModel.fromJson(jsonData['data']);
+    }
+  } catch (e) {
+    print('Error fetching course: $e');
+  }
+  return null;
+}
+
 }
