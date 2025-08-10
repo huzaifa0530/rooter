@@ -6,7 +6,7 @@ import '../Models/NewsModel.dart';
 
 class NewsController extends GetxController {
   var newsList = <NewsModel>[].obs;
-  final String baseUrl = 'https://test.rubicstechnology.com/api'; // Replace with your Laravel backend
+  final String baseUrl = 'https://test.rubicstechnology.com/api'; 
 
   @override
   void onInit() {
@@ -35,18 +35,5 @@ Future<void> fetchNewsList() async {
 }
 
 
-Future<NewsModel?> fetchNewsById(int id) async {
-  final url = 'https://test.rubicstechnology.com/api/news/$id';
-  try {
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      return NewsModel.fromJson(jsonData['data']);
-    }
-  } catch (e) {
-    print('Error fetching news: $e');
-  }
-  return null;
-}
 
 }

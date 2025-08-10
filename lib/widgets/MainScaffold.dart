@@ -8,7 +8,7 @@ class MainScaffold extends StatelessWidget {
   final Widget? drawer;
   final int? currentIndex;
   final Widget? floatingActionButton;
-  final PreferredSizeWidget? customAppBar; // <-- Add this line
+  final PreferredSizeWidget? customAppBar; 
 
   const MainScaffold({
     super.key,
@@ -17,7 +17,7 @@ class MainScaffold extends StatelessWidget {
     this.drawer,
     this.currentIndex,
     this.floatingActionButton,
-    this.customAppBar, // <-- Add this
+    this.customAppBar,
   });
 
   @override
@@ -26,7 +26,7 @@ class MainScaffold extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: customAppBar ?? AppBar( // Use customAppBar if provided
+      appBar: customAppBar ?? AppBar( 
         title: Text(title.tr),
         backgroundColor: theme.primaryColor,
       ),

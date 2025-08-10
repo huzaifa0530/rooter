@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:rooster/Controllers/HomeController.dart';
 import 'package:rooster/CourseListScreen.dart';
 import 'package:rooster/CourseViewScreen.dart';
@@ -8,7 +7,6 @@ import 'package:rooster/HandbookListScreen.dart';
 import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/NewsDetailScreen.dart';
 import 'package:rooster/NewsListScreen.dart';
-
 import 'package:rooster/Widgets/custom_drawer.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 
@@ -34,9 +32,8 @@ class HomeScreen extends StatelessWidget {
             await homeController.fetchHomeData();
           },
           child: ListView(
-            physics:
-                const AlwaysScrollableScrollPhysics(), // required for pull-to-refresh
-            padding: const EdgeInsets.all(16.0),
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(6.0),
             children: [
               Text(
                 'welcome_line'.tr,
@@ -54,9 +51,10 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 📰 News section
+
               NewsSection(
                 context,
-                title: 'Latest News',
+                title: 'latest_news'.tr,
                 icon: Icons.article_outlined,
                 items: [],
                 news: true,
@@ -78,8 +76,6 @@ class HomeScreen extends StatelessWidget {
           ),
         );
       }),
-
-      // 📘 Floating Handbook button
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: theme.colorScheme.primary,
         tooltip: 'handbook'.tr,
@@ -92,7 +88,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // 🧩 Reusable Course or News Section
   Widget buildSection(
     BuildContext context, {
     required HomeController homeController,
@@ -102,8 +97,6 @@ class HomeScreen extends StatelessWidget {
     required bool news,
   }) {
     final theme = Theme.of(context);
-    final List<int> progress = [75, 45, 90];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -139,7 +132,6 @@ class HomeScreen extends StatelessWidget {
         else
           ...List.generate(items.length, (index) {
             final item = items[index];
-            final itemProgress = progress.length > index ? progress[index] : 0;
             return Card(
               color: Colors.white,
               elevation: 4,
@@ -164,7 +156,9 @@ class HomeScreen extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: LinearProgressIndicator(
-                        value: itemProgress / 100,
+                        value:
+                            double.parse(item.progress_percentage.toString()) /
+                                100,
                         minHeight: 8,
                         backgroundColor: Colors.grey.shade300,
                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -174,7 +168,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '$itemProgress% completed',
+                      '${item.progress_percentage}% completed',
                       style:
                           TextStyle(fontSize: 12, color: Colors.grey.shade700),
                     ),

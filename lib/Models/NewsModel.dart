@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class NewsModel {
   final int id;
@@ -26,15 +25,11 @@ class NewsModel {
   });
 
   factory NewsModel.fromJson(Map<String, dynamic> json) {
-    // --- SAFE TAGS PARSING ---
     final rawTags = json['tags'];
     final List<String> tagsList = (rawTags != null && rawTags is List)
       ? rawTags.map((t) => (t['name'] ?? '').toString()).toList()
       : [];
 
-    // --- SAFE CONTENT BLOCKS PARSING ---
-    // Note: your API doesn’t actually return a "sections" field under news,
-    // so this will default to an empty list.
     final rawSections = json['sections'];
     final List<NewsContent> contentList = (rawSections != null && rawSections is List)
       ? rawSections.map((b) => NewsContent.fromJson(b)).toList()
@@ -55,8 +50,8 @@ class NewsModel {
 enum ContentType { image, video, text }
 class NewsContent {
   final ContentType type;
-  final String mediaPath;     // For image or video
-  final String description;   // For description text
+  final String mediaPath;    
+  final String description;  
 
   NewsContent({
     required this.type,

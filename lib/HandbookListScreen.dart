@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'package:rooster/Controllers/HandbookController.dart';
 import 'package:rooster/HandbookDetailScreen.dart';
 
-import 'package:rooster/widgets/custom_bottom_nav.dart';
-
 class HandbookListScreen extends StatelessWidget {
   const HandbookListScreen({super.key});
 
@@ -222,7 +220,7 @@ class HandbookListScreen extends StatelessWidget {
           ),
         );
       }),
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 3),
+      
     );
   }
 }

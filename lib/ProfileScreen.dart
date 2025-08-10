@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
-import 'package:rooster/widgets/custom_bottom_nav.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,8 +12,21 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // User Info
   String userName = '';
   String userEmail = '';
+  String userPhone = '';
+  String userAddress = '';
+  String userStatus = '';
+
+  // Franchise Info
+  String franchiseName = '';
+  String franchiseEmail = '';
+  String franchisePhone = '';
+  String franchiseAddress = '';
+  String franchiseCity = '';
+  String franchiseState = '';
+  String franchiseCountry = '';
 
   final secureStorage = const FlutterSecureStorage();
 
@@ -28,9 +40,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final userJson = await secureStorage.read(key: 'user');
     if (userJson != null) {
       final user = jsonDecode(userJson);
+
       setState(() {
+        // User Info
         userName = user['name'] ?? '';
         userEmail = user['email'] ?? '';
+        userPhone = user['phone'] ?? '';
+        userAddress = user['address'] ?? '';
+        userStatus = user['status'] ?? '';
+
+        // Franchise Info
+        if (user['franchise'] != null) {
+          franchiseName = user['franchise']['name'] ?? '';
+          franchiseEmail = user['franchise']['email'] ?? '';
+          franchisePhone = user['franchise']['phone'] ?? '';
+          franchiseAddress = user['franchise']['address'] ?? '';
+          franchiseCity = user['franchise']['city'] ?? '';
+          franchiseState = user['franchise']['state'] ?? '';
+          franchiseCountry = user['franchise']['country'] ?? '';
+        }
       });
     }
   }
@@ -54,11 +82,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ];
 
     return MainScaffold(
-      title: 'profile',
+      title: 'profile'.tr,
       currentIndex: 3,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           children: [
             const Icon(Icons.person, size: 64, color: Colors.black54),
             const SizedBox(height: 16),
@@ -74,32 +102,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 24),
 
-            // 👇 Inject name/email from secure storage
+            // 👤 User Info
+            Text("user_info".tr,
+                style: const TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
             _buildProfileTile(
-              icon: Icons.person,
-              label: 'name'.tr,
-              value: userName.isNotEmpty ? userName : '...',
-            ),
+                icon: Icons.person,
+                label: 'name'.tr,
+                value: userName.isNotEmpty ? userName : '...'),
             _buildProfileTile(
-              icon: Icons.email,
-              label: 'email'.tr,
-              value: userEmail.isNotEmpty ? userEmail : '...',
-            ),
-
+                icon: Icons.email,
+                label: 'email'.tr,
+                value: userEmail.isNotEmpty ? userEmail : '...'),
             _buildProfileTile(
-                icon: Icons.phone, label: 'phone'.tr, value: '+92 312 0000000'),
-            _buildProfileTile(
-                icon: Icons.store,
-                label: 'restaurant_name'.tr,
-                value: 'Rooster Islamabad'),
+                icon: Icons.phone,
+                label: 'phone'.tr,
+                value: userPhone.isNotEmpty ? userPhone : '...'),
             _buildProfileTile(
                 icon: Icons.location_on,
                 label: 'address'.tr,
-                value: 'F-10 Markaz, Islamabad'),
+                value: userAddress.isNotEmpty ? userAddress : '...'),
+            _buildProfileTile(
+                icon: Icons.verified_user,
+                label: 'status'.tr,
+                value: userStatus.isNotEmpty ? userStatus : '...'),
+
+            const SizedBox(height: 24),
+
+            // 🏢 Franchise Info
+            Text("franchise_info".tr,
+                style: const TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            _buildProfileTile(
+                icon: Icons.store,
+                label: 'restaurant_name'.tr,
+                value: franchiseName.isNotEmpty ? franchiseName : '...'),
+            _buildProfileTile(
+                icon: Icons.email,
+                label: 'email'.tr,
+                value: franchiseEmail.isNotEmpty ? franchiseEmail : '...'),
+            _buildProfileTile(
+                icon: Icons.phone,
+                label: 'phone'.tr,
+                value: franchisePhone.isNotEmpty ? franchisePhone : '...'),
+            _buildProfileTile(
+                icon: Icons.location_on,
+                label: 'address'.tr,
+                value: franchiseAddress.isNotEmpty ? franchiseAddress : '...'),
             _buildProfileTile(
                 icon: Icons.location_city,
                 label: 'city'.tr,
-                value: 'Islamabad'),
+                value: franchiseCity.isNotEmpty ? franchiseCity : '...'),
+            _buildProfileTile(
+                icon: Icons.map,
+                label: 'state'.tr,
+                value: franchiseState.isNotEmpty ? franchiseState : '...'),
+            _buildProfileTile(
+                icon: Icons.flag,
+                label: 'country'.tr,
+                value: franchiseCountry.isNotEmpty ? franchiseCountry : '...'),
 
             const SizedBox(height: 32),
             Text(

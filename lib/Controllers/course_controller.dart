@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:rooster/Models/CourseModel.dart';
 import 'package:http/http.dart' as http;
@@ -5,7 +6,7 @@ import 'dart:convert';
 
 class CourseController extends GetxController {
   var courses = <CourseModel>[].obs;
-  var isLoading = false.obs; // Declare ONLY ONCE
+  var isLoading = false.obs; 
   var selectedCourse = Rxn<CourseModel>();
 
   @override
@@ -14,16 +15,34 @@ class CourseController extends GetxController {
     super.onInit();
   }
 
+  final storage = const FlutterSecureStorage();
+
+Future<String?> _getLoggedInUserId() async {
+  final userJson = await storage.read(key: 'user');
+  if (userJson != null) {
+    final userMap = jsonDecode(userJson);
+    return userMap['id']?.toString();
+  }
+  return null;
+}
+
   Future<void> fetchCourses() async {
     isLoading.value = true;
     try {
-      final response = await http.get(
-        Uri.parse('https://test.rubicstechnology.com/api/courses'),
-      );
+      final userId = await _getLoggedInUserId();
+      if (userId == null) {
+        print("⚠ No logged-in user ID found.");
+        isLoading.value = false;
+        return;
+      }
 
+      final response = await http.get(
+        Uri.parse(
+            'https://test.rubicstechnology.com/api/courses/list/$userId'),
+      );
       if (response.statusCode == 200) {
         final jsonBody = jsonDecode(response.body);
-        List data = jsonBody; // assuming API returns a list directly
+        List data = jsonBody; 
         courses.value = data.map((e) => CourseModel.fromJson(e)).toList();
       } else {
         print('Failed to load courses. Status: ${response.statusCode}');
@@ -38,11 +57,17 @@ class CourseController extends GetxController {
   Future<void> fetchCourseDetail(int courseId) async {
     isLoading.value = true;
     try {
+            final userId = await _getLoggedInUserId();
+      if (userId == null) {
+        print("⚠ No logged-in user ID found.");
+        isLoading.value = false;
+        return;
+      }
       final response = await http.get(
-          Uri.parse('https://test.rubicstechnology.com/api/courses/$courseId'));
+          Uri.parse('https://test.rubicstechnology.com/api/courses/$courseId/$userId'));
 
-      print('Course Detail Status Code: ${response.statusCode}');
-      print('Course Detail Response: ${response.body}');
+      // print('Course Detail Status Code: ${response.statusCode}');
+      // print('Course Detail Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);
@@ -50,7 +75,7 @@ class CourseController extends GetxController {
         if (decoded != null && decoded is Map<String, dynamic>) {
           final course = CourseModel.fromJson(decoded);
           selectedCourse.value = course;
-          print('Course Loaded: ${course.title}');
+          // print('Course Loaded: ${course.title}');
         } else {
           print('Unexpected response format (not a Map): $decoded');
           Get.snackbar('Error', 'Unexpected response from server');
@@ -68,22 +93,18 @@ class CourseController extends GetxController {
     }
   }
 
-  int getProgress(String courseTitle) {
-    return 20; // fake progress for now
-  }
 
   Future<CourseModel?> fetchCourseById(int id) async {
-  final url = 'https://test.rubicstechnology.com/api/courses/$id';
-  try {
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      return CourseModel.fromJson(jsonData['data']);
+    final url = 'https://test.rubicstechnology.com/api/courses/$id';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        return CourseModel.fromJson(jsonData['data']);
+      }
+    } catch (e) {
+      print('Error fetching course: $e');
     }
-  } catch (e) {
-    print('Error fetching course: $e');
+    return null;
   }
-  return null;
-}
-
 }

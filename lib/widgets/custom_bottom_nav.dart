@@ -6,7 +6,7 @@ import 'package:rooster/NewsListScreen.dart';
 import 'package:rooster/ProfileScreen.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
-  final int? currentIndex; // can be null when no tab should be active
+  final int? currentIndex; 
 
   const CustomBottomNavBar({super.key, this.currentIndex});
 
@@ -23,33 +23,31 @@ class CustomBottomNavBar extends StatelessWidget {
           icon: const Icon(Icons.person), label: 'profile'.tr),
     ];
 
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: theme.primaryColor,
-      unselectedItemColor: Colors.grey,
-      currentIndex: (currentIndex != null &&
-              currentIndex! >= 0 &&
-              currentIndex! < items.length)
-          ? currentIndex!
-          : 0, // fallback to 0
-      onTap: (index) {
-        switch (index) {
-          case 0:
-            Get.offAll(() => const HomeScreen());
-            break;
-          case 1:
-            Get.offAll(() => const CourseListScreen());
-            break;
-          case 2:
-            Get.offAll(() => const NewsListScreen());
-            break;
-          case 3:
-            Get.offAll(() => const ProfileScreen());
-            break;
-        }
-      },
+return BottomNavigationBar(
+  type: BottomNavigationBarType.fixed,
+  currentIndex: currentIndex ?? 0,
+  selectedItemColor: currentIndex == null ? Colors.grey : theme.primaryColor,
+  unselectedItemColor: Colors.grey,
 
-      items: items,
-    );
-  }
+  onTap: (index) {
+    // Always navigate regardless of currentIndex
+    switch (index) {
+      case 0:
+        Get.offAll(() => const HomeScreen());
+        break;
+      case 1:
+        Get.offAll(() => const CourseListScreen());
+        break;
+      case 2:
+        Get.offAll(() => const NewsListScreen());
+        break;
+      case 3:
+        Get.offAll(() => const ProfileScreen());
+        break;
+    }
+  },
+
+  items: items,
+);
+ }
 }

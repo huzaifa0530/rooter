@@ -1,23 +1,25 @@
 class CourseModel {
-  final int id; // ✅ Add this line
+  final int id;
   final String title;
   final String description;
   final String thumbnailPath;
   final String instructor;
   final String duration;
   final double rating;
+  final String progress_percentage;
   final int enrolled;
   final List<SectionModel> sections;
-  final List<String> resources;
+  final List<ResourceModel> resources;
 
   CourseModel({
-    required this.id, // ✅ Add this
+    required this.id,
     required this.title,
     required this.description,
     required this.thumbnailPath,
     required this.instructor,
     required this.duration,
     this.rating = 0.0,
+    required this.progress_percentage,
     this.enrolled = 0,
     this.sections = const [],
     this.resources = const [],
@@ -31,8 +33,16 @@ class CourseModel {
         if (sectionJson['lectures'] != null) {
           lectures = (sectionJson['lectures'] as List).map((lectureJson) {
             return LectureModel(
+              id: lectureJson['id'] ?? 0,
+              sectionId: lectureJson['section_id']?.toString() ?? '',
               title: lectureJson['title'] ?? '',
-              videoPath: lectureJson['path'] ?? '',
+              path: lectureJson['path'] ?? '',
+              mediaType: lectureJson['media_type'] ?? '',
+              position: lectureJson['position']?.toString() ?? '',
+              progress: (lectureJson['progress'] as List? ?? [])
+                  .map((p) => ProgressModel.fromJson(p))
+                  .toList(),
+              isViewed: (lectureJson['progress'] as List? ?? []).isNotEmpty,
             );
           }).toList();
         }
@@ -43,26 +53,45 @@ class CourseModel {
       }).toList();
     }
 
-    List<String> parsedResources = [];
+    List<ResourceModel> parsedResources = [];
     if (json['resources'] != null) {
       parsedResources = (json['resources'] as List)
-          .map((res) => res['file_path'] ?? '')
-          .where((path) => path.isNotEmpty)
-          .toList()
-          .cast<String>();
+          .map((res) => ResourceModel.fromJson(res))
+          .toList();
     }
 
     return CourseModel(
-      id: json['id'], // ✅ Parse the ID here
+      id: json['id'],
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       thumbnailPath: json['thumbnail_path'] ?? '',
       instructor: json['instructor'] ?? '',
       duration: json['duration'] ?? '',
       rating: (json['rating'] ?? 0).toDouble(),
+      progress_percentage: (json['progress_percentage'] ?? '0.00').toString(),
       enrolled: json['enrolled'] ?? 0,
       sections: parsedSections,
       resources: parsedResources,
+    );
+  }
+}
+
+class ResourceModel {
+  final int id;
+  final String title;
+  final String filePath;
+
+  ResourceModel({
+    required this.id,
+    required this.title,
+    required this.filePath,
+  });
+
+  factory ResourceModel.fromJson(Map<String, dynamic> json) {
+    return ResourceModel(
+      id: json['id'] ?? 0,
+      title: json['title'] ?? '',
+      filePath: json['file_path'] ?? '',
     );
   }
 }
@@ -75,22 +104,86 @@ class SectionModel {
 }
 
 class LectureModel {
+  final int id;
+  final String sectionId;
   final String title;
-  final String videoPath; // Store raw path here
-  final bool isDownloaded;
+  final String path;
+  final String mediaType;
+  final String position;
+  final List<ProgressModel> progress;
   bool isViewed;
 
   LectureModel({
+    required this.id,
+    required this.sectionId,
     required this.title,
-    required this.videoPath,
-    this.isDownloaded = false,
+    required this.path,
+    required this.mediaType,
+    required this.position,
+    required this.progress,
     this.isViewed = false,
   });
-
   String get videoUrl {
-    final parts = videoPath.split('/');
-    final filename = Uri.encodeComponent(parts.last);
-    final directory = parts.sublist(0, parts.length - 1).join('/');
-    return 'https://test.rubicstechnology.com/storage/app/public/$directory/$filename';
+    final trimmed = path.trim();
+    if (trimmed.toLowerCase().startsWith('http')) return trimmed;
+
+    final pathSegments = <String>[
+      'storage',
+      'app',
+      'public',
+      ...trimmed.split('/').where((s) => s.isNotEmpty)
+    ];
+    final uri = Uri(
+      scheme: 'https',
+      host: 'test.rubicstechnology.com',
+      pathSegments: pathSegments,
+    );
+    return uri.toString();
+  }
+
+  factory LectureModel.fromJson(Map<String, dynamic> json) {
+    List<ProgressModel> progressList = [];
+    if (json['progress'] != null) {
+      progressList = (json['progress'] as List)
+          .map((p) => ProgressModel.fromJson(p))
+          .toList();
+    }
+
+    return LectureModel(
+      id: json['id'],
+      sectionId: json['section_id'],
+      title: json['title'],
+      path: json['path'],
+      mediaType: json['media_type'],
+      position: json['position'],
+      progress: progressList,
+      isViewed: progressList.isNotEmpty,
+    );
+  }
+}
+
+class ProgressModel {
+  final int id;
+  final String? lectureId;
+  final String? resourceId;
+  final String userId;
+  final dynamic createdAt;
+
+  ProgressModel({
+    required this.id,
+    this.lectureId,
+    this.resourceId,
+    required this.userId,
+    this.createdAt,
+  });
+
+  factory ProgressModel.fromJson(Map<String, dynamic> json) {
+    return ProgressModel(
+      id: json['id'],
+      lectureId: json['lecture_id'],
+      resourceId: json['resource_id'],
+      userId: json['user_id'],
+      createdAt: json['created_at'],
+    );
   }
 }

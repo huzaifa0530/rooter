@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rooster/LoginScreen.dart';
-import 'package:rooster/HomeScreen.dart'; // Import your home screen
+import 'package:rooster/HomeScreen.dart';
+import 'package:rooster/services/api_service.dart';
+
+import 'package:rooster/services/notification_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
 
     _startAnimations();
-    _checkLoginStatus(); // Start token check
+    _checkLoginStatus();
   }
 
   void _startAnimations() {
@@ -50,13 +53,31 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkLoginStatus() async {
-    await Future.delayed(const Duration(seconds: 3)); // Splash delay
-    final token = await storage.read(key: 'token');
+    await Future.delayed(const Duration(seconds: 3));
 
-    if (token != null && token.isNotEmpty) {
-      Get.off(() => const HomeScreen());
-    } else {
-      Get.off(() => const LoginScreen());
+    try {
+      final token = await storage.read(key: 'token');
+      debugPrint(
+          'Splash: token="$token", pendingNotificationArgs=${NotificationService.pendingNotificationArgs}');
+
+      if (token != null && token.isNotEmpty) {
+        if (NotificationService.pendingNotificationArgs != null) {
+          final args = Map<String, dynamic>.from(
+              NotificationService.pendingNotificationArgs!);
+          NotificationService.pendingNotificationArgs = null;
+          Get.offAll(() => const HomeScreen());
+          Future.delayed(const Duration(milliseconds: 300), () {
+            ApiService.handleNotificationNavigation(args['type'], args['id']);
+          });
+        } else {
+          Get.offAll(() => const HomeScreen());
+        }
+      } else {
+        Get.offAll(() => const LoginScreen());
+      }
+    } catch (e, st) {
+      debugPrint('Error reading token in splash: $e\n$st');
+      Get.offAll(() => const LoginScreen());
     }
   }
 

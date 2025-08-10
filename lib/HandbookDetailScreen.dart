@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rooster/Models/Handbook.dart';
-import 'package:rooster/widgets/MainScaffold.dart';
 import 'package:video_player/video_player.dart';
 
 class HandbookDetailScreen extends StatelessWidget {
@@ -13,15 +13,22 @@ class HandbookDetailScreen extends StatelessWidget {
     final imageUrl =
         'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
 
-    return MainScaffold(
-      title: 'Rooster',
-      currentIndex: null,
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Row(
+          children: [
+            // const Icon(Icons.restaurant_menu, size: 24),
+            // const SizedBox(width: 2),
+            Text('chef_handbook'.tr),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 🖼 Main Thumbnail
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: SizedBox(
@@ -40,10 +47,7 @@ class HandbookDetailScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
-            // 🧾 Title & Description
             Text(
               handbook.title,
               style: theme.textTheme.headlineSmall
@@ -55,27 +59,18 @@ class HandbookDetailScreen extends StatelessWidget {
               style:
                   theme.textTheme.bodyMedium?.copyWith(color: Colors.black87),
             ),
-
             const SizedBox(height: 24),
-
-            // 🔁 Dynamic Content Blocks
             ...handbook.contentBlocks
                 .sortedByPosition()
                 .map((block) => _buildContentBlock(block)),
-
             const SizedBox(height: 24),
-
-            // 📌 Tags
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children:
                   handbook.tags.map((tag) => _buildTag(tag, theme)).toList(),
             ),
-
             const SizedBox(height: 30),
-
-            // 🧑‍🍳 Chef Tip
             if (handbook.chefTip != null && handbook.chefTip!.isNotEmpty)
               Container(
                 padding: const EdgeInsets.all(16),
@@ -108,7 +103,6 @@ class HandbookDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
             const SizedBox(height: 40),
           ],
         ),
@@ -116,7 +110,6 @@ class HandbookDetailScreen extends StatelessWidget {
     );
   }
 
-  /// 🔁 Build content block (text, image, video)
   Widget _buildContentBlock(HandbookContent block) {
     switch (block.type) {
       case ContentType.text:
@@ -189,7 +182,6 @@ class HandbookDetailScreen extends StatelessWidget {
   }
 }
 
-/// 📦 Extension to sort content blocks by position
 extension SortHandbookContent on List<HandbookContent> {
   List<HandbookContent> sortedByPosition() {
     List<HandbookContent> sortedList = [...this];
@@ -198,7 +190,6 @@ extension SortHandbookContent on List<HandbookContent> {
   }
 }
 
-/// 🎥 Video Block Widget with Play/Pause
 class VideoBlockWidget extends StatefulWidget {
   final String videoUrl;
   const VideoBlockWidget({super.key, required this.videoUrl});

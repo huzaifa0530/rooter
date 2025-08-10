@@ -34,14 +34,8 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/Logo3.jpg
-    - assets/images/App_Update.png
-    - assets/images/summer.jpg
-    - assets/images/Branch.jpg
-    - assets/images/chicken.jpg
     - assets/images/no_image.jpg
-    - assets/images/Hygine.jpg
     - assets/images/logo2.png
-    - assets/pdf/
 
   fonts:
     - family: Poppins

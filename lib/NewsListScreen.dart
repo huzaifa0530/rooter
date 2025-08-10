@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import 'package:rooster/NewsDetailScreen.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
-import 'package:rooster/Controllers/NewsController.dart'; // Make sure this path is correct
+import 'package:rooster/Controllers/NewsController.dart';
 
 class NewsListScreen extends StatelessWidget {
   const NewsListScreen({super.key});
@@ -43,10 +42,9 @@ class NewsListScreen extends StatelessWidget {
                     itemCount: controller.newsList.length,
                     itemBuilder: (context, index) {
                       final news = controller.newsList[index];
-                      final isRecent =
-                          DateTime.now().difference(news.publishedAt).inDays <=
-                              3;
-
+                      // final isRecent =
+                      //     DateTime.now().difference(news.publishedAt).inDays <=
+                      //         3;
                       return Card(
                         color: Colors.white,
                         shadowColor: Colors.black.withOpacity(0.2),
@@ -89,24 +87,6 @@ class NewsListScreen extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        if (isRecent)
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8, vertical: 4),
-                                            decoration: BoxDecoration(
-                                              color: theme.primaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: Text(
-                                              'new'.tr,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
                                       ],
                                     ),
                                     const SizedBox(height: 6),

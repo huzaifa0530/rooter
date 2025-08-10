@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooster/CourseViewScreen.dart';
-import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/Controllers/course_controller.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 
@@ -11,7 +10,7 @@ class CourseListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final controller = Get.find<CourseController>(); // Safe now
+    final controller = Get.find<CourseController>(); 
 
     return MainScaffold(
       title: 'latest_courses',
@@ -33,8 +32,6 @@ class CourseListScreen extends StatelessWidget {
             itemCount: courses.length,
             itemBuilder: (_, i) {
               final course = courses[i];
-              final progress = controller.getProgress(course.title);
-
               return InkWell(
                 onTap: () async {
                   final courseController = Get.find<CourseController>();
@@ -90,7 +87,9 @@ class CourseListScreen extends StatelessWidget {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: LinearProgressIndicator(
-                                  value: progress / 100,
+                                  value: double.parse(course.progress_percentage
+                                          .toString()) /
+                                      100,
                                   minHeight: 8,
                                   backgroundColor: Colors.grey.shade300,
                                   valueColor: AlwaysStoppedAnimation<Color>(
@@ -100,7 +99,7 @@ class CourseListScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                '$progress% completed',
+                                '${course.progress_percentage}% completed',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey.shade700,

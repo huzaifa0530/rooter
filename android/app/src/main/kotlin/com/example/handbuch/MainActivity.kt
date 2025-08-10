@@ -1,4 +1,4 @@
-package com.example.rooster
+package com.rooster.handbuch
 
 import io.flutter.embedding.android.FlutterActivity
 

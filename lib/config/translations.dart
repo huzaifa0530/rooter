@@ -56,6 +56,8 @@ class AppTranslations extends Translations {
           'courses': 'Courses',
           'news': 'News',
           'tap_lecture': 'Tap a lecture to begin watching.',
+           'user_info': 'User Information',
+          'franchise_info': 'Franchise Information',
         },
         'de_DE': {
           'ROOSTER': 'ROOSTER',
@@ -110,6 +112,8 @@ class AppTranslations extends Translations {
           'news': 'Nachrichten',
           'tap_lecture':
               'Tippen Sie auf eine Lektion, um das Ansehen zu starten.',
+                   'user_info': 'Benutzerinformationen',
+          'franchise_info': 'Franchise-Informationen',
         },
       };
 }

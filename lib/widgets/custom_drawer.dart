@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rooster/Controllers/user_controller.dart'; // import your controller
+import 'package:rooster/Controllers/user_controller.dart';
 import 'package:rooster/ContactScreen.dart';
 import 'package:rooster/LoginScreen.dart';
 import 'package:rooster/ProfileScreen.dart';
@@ -81,16 +81,9 @@ class CustomDrawer extends StatelessWidget {
       buttonColor: theme.primaryColor,
       cancelTextColor: theme.primaryColor,
       onConfirm: () async {
-        // Clear secure storage
-        final storage = FlutterSecureStorage(); // ✅ Correct, remove 'const'
-
+        final storage = FlutterSecureStorage();
         await storage.delete(key: 'token');
         await storage.delete(key: 'user');
-
-        // Optionally clear any controllers
-        final userController = Get.find<UserController>();
-        userController.clearUser();
-
         Get.offAll(() => const LoginScreen());
       },
     );

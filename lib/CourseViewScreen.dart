@@ -28,7 +28,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
   @override
   void dispose() {
     _tabController.dispose();
-    Get.delete<LectureController>(); // Optional cleanup
+    Get.delete<LectureController>();
     super.dispose();
   }
 
@@ -44,7 +44,6 @@ class _CourseViewScreenState extends State<CourseViewScreen>
         title: const Text('ROOSTER'),
         backgroundColor: theme.primaryColor,
         bottom: TabBar(
-          // ← put your TabBar here
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
@@ -92,8 +91,6 @@ class _CourseViewScreenState extends State<CourseViewScreen>
       imageUrl = '$baseUrl$directory/$filename';
     }
 
-    print('Final imageUrl: $imageUrl');
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -107,7 +104,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
               width: double.infinity,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Text(
-                'err $imageUrl', // Correct Dart string interpolation
+                'err $imageUrl',
               ),
             ),
           ),
@@ -176,8 +173,6 @@ class _CourseViewScreenState extends State<CourseViewScreen>
               Center(
                 child: Text("tap_lecture".tr, style: TextStyle(fontSize: 16)),
               ),
-
-            // Lecture List
             ...course.sections.map((section) => ExpansionTile(
                   title: Text(section.title,
                       style: const TextStyle(fontWeight: FontWeight.w600)),
@@ -192,7 +187,18 @@ class _CourseViewScreenState extends State<CourseViewScreen>
                       ),
                       trailing: const Icon(Icons.play_circle_fill,
                           color: Colors.deepPurple),
-                      onTap: () => lectureController.playLecture(lecture),
+                      onTap: () async {
+                      
+                        if (!lecture.isViewed) {
+                          lecture.isViewed = true;
+                          setState(() {});
+                          await lectureController.markProgress(
+                            lectureId: lecture.id,
+                            resourceId: null,
+                          );
+                        }
+                        lectureController.playLecture(lecture);
+                      },
                     );
                   }).toList(),
                 )),
@@ -200,7 +206,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
         ));
   }
 
-  Widget _buildResourcesTab(List<String> resources, ThemeData theme) {
+  Widget _buildResourcesTab(List<ResourceModel> resources, ThemeData theme) {
     String buildResourceUrl(String rawPath) {
       final parts = rawPath.split('/');
       final filename = Uri.encodeComponent(parts.last);
@@ -212,17 +218,27 @@ class _CourseViewScreenState extends State<CourseViewScreen>
       padding: const EdgeInsets.all(16),
       itemCount: resources.length,
       separatorBuilder: (_, __) => const Divider(),
-      itemBuilder: (context, i) => ListTile(
-        leading: const Icon(Icons.picture_as_pdf, color: Colors.redAccent),
-        title: Text('Download Resource ${i + 1}'),
-        subtitle:
-            Text(resources[i], maxLines: 1, overflow: TextOverflow.ellipsis),
-        trailing: const Icon(Icons.download),
-        onTap: () async {
-          final url = buildResourceUrl(resources[i]);
-          Get.to(() => PdfViewerScreen(path: url));
-        },
-      ),
+      itemBuilder: (context, i) {
+        final resource = resources[i];
+        return ListTile(
+          leading: const Icon(Icons.picture_as_pdf, color: Colors.redAccent),
+          title: Text(resource.title),
+          subtitle: Text(
+            resource.filePath,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: const Icon(Icons.download),
+          onTap: () async {
+            final url = buildResourceUrl(resource.filePath);
+            await lectureController.markProgress(
+              lectureId: null,
+              resourceId: resource.id,
+            );
+            Get.to(() => PdfViewerScreen(path: url));
+          },
+        );
+      },
     );
   }
 }

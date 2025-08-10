@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rooster/controllers/login_controller.dart'; // import controller
+import 'package:rooster/controllers/login_controller.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

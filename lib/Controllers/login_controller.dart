@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rooster/Controllers/user_controller.dart';
-import 'package:rooster/main.dart';
 import '../HomeScreen.dart';
 import '../widgets/app_snackbar.dart';
+import 'package:rooster/services/api_service.dart';
+
+import 'package:rooster/services/notification_service.dart';
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
@@ -44,11 +46,22 @@ class LoginController extends GetxController {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data['success'] == true) {
+        final user = data['user'];
+
+        if (user['role'] != 'franchise' || user['status'] != 'active') {
+          AppSnackbar.show(
+            title: "Access Restricted",
+            message: "You are restricted from accessing the app.",
+            type: SnackbarType.error,
+          );
+          return;
+        }
+
         await secureStorage.write(key: 'token', value: data['token']);
-        await secureStorage.write(key: 'user', value: jsonEncode(data['user']));
+        await secureStorage.write(key: 'user', value: jsonEncode(user));
 
         final userController = Get.find<UserController>();
-        userController.setUser(data['user']['name'], data['user']['email']);
+        userController.setUser(user['name'], user['email']);
 
         AppSnackbar.show(
           title: "Login Success",
@@ -56,19 +69,18 @@ class LoginController extends GetxController {
           type: SnackbarType.success,
         );
 
-        // ✅ Handle redirect logic after login
-
-        print("📦 Pending notification args: $pendingNotificationArgs");
-        final args = pendingNotificationArgs;
+        print(
+            "📦 Pending notification args: ${NotificationService.pendingNotificationArgs}");
+        final args = NotificationService.pendingNotificationArgs;
 
         if (args != null &&
             args.containsKey('type') &&
             args.containsKey('id')) {
           print(
               "🚀 Redirecting to detail with type: ${args['type']}, id: ${args['id']}");
-          pendingNotificationArgs = null;
+          NotificationService.pendingNotificationArgs = null;
           Future.delayed(const Duration(milliseconds: 1200), () {
-            handleNotificationNavigation(args['type'], args['id']);
+            ApiService.handleNotificationNavigation(args['type'], args['id']);
           });
         } else {
           print("🏠 Redirecting to HomeScreen");
@@ -77,7 +89,6 @@ class LoginController extends GetxController {
           });
         }
       } else if (response.statusCode == 422) {
-        // Laravel validation error (wrong password, etc.)
         AppSnackbar.show(
           title: "Invalid Credentials",
           message: data['message'] ?? "Email or password is incorrect",

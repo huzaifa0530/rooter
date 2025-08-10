@@ -5,7 +5,7 @@ import 'package:rooster/widgets/MainScaffold.dart';
 import 'dart:convert';
 import 'package:video_player/video_player.dart';
 
-import '../Models/NewsModel.dart'; // Assuming your model exists
+import '../Models/NewsModel.dart';
 
 class NewsDetailScreen extends StatelessWidget {
   final NewsModel news;
@@ -57,7 +57,6 @@ class NewsDetailScreen extends StatelessWidget {
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                // Header Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(14),
                   child: Image.network(
@@ -115,7 +114,6 @@ class NewsDetailScreen extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                // Sections: Image / Video + description
                 ...updatedNews.contentBlocks.map((block) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 24),
