@@ -65,7 +65,7 @@ class NewsListScreen extends StatelessWidget {
                                   top: Radius.circular(14),
                                 ),
                                 child: Image.network(
-                                  'https://test.rubicstechnology.com/storage/app/public/${news.imagePath}',
+                                  'https://handbuch-rfc.com/storage/app/public/${news.imagePath}',
                                   height: 180,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -91,7 +91,7 @@ class NewsListScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 6),
                                     Text(
-                                      news.shortDescription,
+                                      news.description,
                                       style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.black87,

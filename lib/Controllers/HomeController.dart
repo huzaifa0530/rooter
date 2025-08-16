@@ -10,7 +10,7 @@ class HomeController extends GetxController {
   var courseList = <CourseModel>[].obs;
   var isLoading = false.obs;
 
-  final String baseUrl = 'https://test.rubicstechnology.com/api';
+  final String baseUrl = 'https://handbuch-rfc.com/api';
 
   @override
   void onInit() {
@@ -69,4 +69,6 @@ class HomeController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  
 }

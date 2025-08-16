@@ -55,7 +55,7 @@ class CourseListScreen extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                            'https://test.rubicstechnology.com/storage/app/public/${course.thumbnailPath}',
+                            'https://handbuch-rfc.com/storage/app/public/${course.thumbnailPath}',
                             width: 80,
                             height: 80,
                             fit: BoxFit.cover,
@@ -72,17 +72,17 @@ class CourseListScreen extends StatelessWidget {
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600)),
-                              const SizedBox(height: 6),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.timer,
-                                      size: 14, color: Colors.grey[700]),
-                                  const SizedBox(width: 2),
-                                  Text(course.duration,
-                                      style: const TextStyle(fontSize: 13)),
-                                ],
-                              ),
+                              // const SizedBox(height: 6),
+                              // Row(
+                              //   mainAxisSize: MainAxisSize.min,
+                              //   children: [
+                              //     Icon(Icons.timer,
+                              //         size: 14, color: Colors.grey[700]),
+                              //     const SizedBox(width: 2),
+                              //     Text(course.duration,
+                              //         style: const TextStyle(fontSize: 13)),
+                              //   ],
+                              // ),
                               const SizedBox(height: 12),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),

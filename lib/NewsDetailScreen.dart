@@ -13,7 +13,7 @@ class NewsDetailScreen extends StatelessWidget {
   const NewsDetailScreen({super.key, required this.news});
 
   Future<NewsModel> fetchNewsDetail() async {
-    final String url = 'https://test.rubicstechnology.com/api/news/${news.id}';
+    final String url = 'https://handbuch-rfc.com/api/news/${news.id}';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -60,7 +60,7 @@ class NewsDetailScreen extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(14),
                   child: Image.network(
-                    'https://test.rubicstechnology.com/storage/app/public/${updatedNews.imagePath}',
+                    'https://handbuch-rfc.com/storage/app/public/${updatedNews.imagePath}',
                     fit: BoxFit.cover,
                     height: 220,
                     width: double.infinity,
@@ -124,7 +124,7 @@ class NewsDetailScreen extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
-                              'https://test.rubicstechnology.com/storage/app/public/${block.mediaPath}',
+                              'https://handbuch-rfc.com/storage/app/public/${block.mediaPath}',
                               width: double.infinity,
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) =>
@@ -143,7 +143,7 @@ class NewsDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                             child: VideoPlayerWidget(
                               videoUrl:
-                                  'https://test.rubicstechnology.com/storage/app/public/${block.mediaPath}',
+                                  'https://handbuch-rfc.com/storage/app/public/${block.mediaPath}',
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -165,28 +165,31 @@ class NewsDetailScreen extends StatelessWidget {
                 const SizedBox(height: 30),
 
                 // Footer
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    children: const [
-                      Text(
-                        'Did you enjoy this update?',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 6),
-                      Text(
-                        'Share it with your friends or visit your nearest ROOSTER location today!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   padding: const EdgeInsets.all(16),
+                //   decoration: BoxDecoration(
+                //     color: Colors.grey[100],
+                //     borderRadius: BorderRadius.circular(12),
+                //   ),
+                //   child: Column(
+                //     children: const [
+                //       Text(
+                //         'Did you enjoy this update?',
+                //         style: TextStyle(
+                //             fontSize: 16, fontWeight: FontWeight.bold),
+                //       ),
+                //       SizedBox(height: 6),
+                //       Text(
+                //         'Share it with your friends or visit your nearest ROOSTER location today!',
+                //         textAlign: TextAlign.center,
+                //         style: TextStyle(color: Colors.black54),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+          
+          
+          
               ],
             );
           },

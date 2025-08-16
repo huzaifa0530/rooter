@@ -9,7 +9,7 @@ import 'package:rooster/NewsDetailScreen.dart';
 import 'package:rooster/models/handbook.dart';
 
 class ApiService {
-  static const baseUrl = 'https://test.rubicstechnology.com/api';
+  static const baseUrl = 'https://handbuch-rfc.com/api';
 
   static Future<NewsModel?> fetchNewsById(int id) async {
     return _fetchData<NewsModel>('$baseUrl/news/$id', (json) => NewsModel.fromJson(json));

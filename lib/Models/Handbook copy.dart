@@ -1,9 +1,9 @@
-// models/handbook.dart
+// models/Handbook.dart
 
 enum ContentType { text, image, video }
 
 ContentType parseContentType(String type) {
-  switch (type.toLowerCase()) {
+  switch (type) {
     case 'image':
       return ContentType.image;
     case 'video':
@@ -35,21 +35,22 @@ class Handbook {
   factory Handbook.fromJson(Map<String, dynamic> json) {
     return Handbook(
       id: json['id'],
-      title: json['title'] ?? '',
+      title: json['title'],
       description: json['description'] ?? '',
-      thumbnailUrl: json['thumbnail_url'],
+      thumbnailUrl: json['thumbnail_url'] ?? '',
       chefTip: json['chef_tip'],
       tags: List<String>.from(json['tags'] ?? []),
-      contentBlocks: (json['content_blocks'] as List<dynamic>? ?? [])
-          .map((e) => HandbookContent.fromJson(e))
-          .toList(),
+      contentBlocks: (json['content_blocks'] as List<dynamic>?)
+              ?.map((e) => HandbookContent.fromJson(e))
+              .toList() ??
+          [],
     );
   }
 }
 
 class HandbookContent {
   final ContentType type;
-  final String data; // Could be text, image URL, or video URL
+  final String data;
   final int position;
 
   HandbookContent({
@@ -60,7 +61,7 @@ class HandbookContent {
 
   factory HandbookContent.fromJson(Map<String, dynamic> json) {
     return HandbookContent(
-      type: parseContentType(json['type'] ?? 'text'),
+      type: parseContentType(json['type']),
       data: json['data'] ?? '',
       position: int.tryParse(json['position']?.toString() ?? '0') ?? 0,
     );

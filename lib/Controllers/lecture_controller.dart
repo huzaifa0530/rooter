@@ -73,7 +73,7 @@ class LectureController extends GetxController {
     try {
       final userId = await _getLoggedInUserId();
       final response = await http.post(
-        Uri.parse("https://test.rubicstechnology.com/api/course-progress"),
+        Uri.parse("https://handbuch-rfc.com/api/course-progress"),
         headers: {
           'Content-Type': 'application/json',
         },

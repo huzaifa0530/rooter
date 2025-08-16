@@ -38,7 +38,7 @@ Future<String?> _getLoggedInUserId() async {
 
       final response = await http.get(
         Uri.parse(
-            'https://test.rubicstechnology.com/api/courses/list/$userId'),
+            'https://handbuch-rfc.com/api/courses/list/$userId'),
       );
       if (response.statusCode == 200) {
         final jsonBody = jsonDecode(response.body);
@@ -64,7 +64,7 @@ Future<String?> _getLoggedInUserId() async {
         return;
       }
       final response = await http.get(
-          Uri.parse('https://test.rubicstechnology.com/api/courses/$courseId/$userId'));
+          Uri.parse('https://handbuch-rfc.com/api/courses/$courseId/$userId'));
 
       // print('Course Detail Status Code: ${response.statusCode}');
       // print('Course Detail Response: ${response.body}');
@@ -95,7 +95,7 @@ Future<String?> _getLoggedInUserId() async {
 
 
   Future<CourseModel?> fetchCourseById(int id) async {
-    final url = 'https://test.rubicstechnology.com/api/courses/$id';
+    final url = 'https://handbuch-rfc.com/api/courses/$id';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

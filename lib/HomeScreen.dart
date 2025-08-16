@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rooster/Controllers/HomeController.dart';
 import 'package:rooster/CourseListScreen.dart';
 import 'package:rooster/CourseViewScreen.dart';
+import 'package:rooster/HandbookBrowserScreen.dart';
 import 'package:rooster/HandbookListScreen.dart';
 import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/NewsDetailScreen.dart';
@@ -80,7 +81,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: theme.colorScheme.primary,
         tooltip: 'handbook'.tr,
         onPressed: () {
-          Get.to(() => const HandbookListScreen());
+          Get.to(() =>  HandbookBrowserScreen());
         },
         label: Text('handbook'.tr),
         icon: const Icon(Icons.menu_book_outlined),
@@ -232,7 +233,7 @@ class HomeScreen extends StatelessWidget {
                 final newsItem = newsList[index];
                 String fullImageUrl = newsItem.imagePath.startsWith('http')
                     ? newsItem.imagePath
-                    : 'https://test.rubicstechnology.com/storage/app/public/${newsItem.imagePath}';
+                    : 'https://handbuch-rfc.com/storage/app/public/${newsItem.imagePath}';
 
                 return GestureDetector(
                   onTap: () {

@@ -76,7 +76,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
   }
 
   Widget _buildOverviewTab(CourseModel course, ThemeData theme) {
-    String baseUrl = 'https://test.rubicstechnology.com/storage/app/public/';
+    String baseUrl = 'https://handbuch-rfc.com/storage/app/public/';
     String thumbnailPath = course.thumbnailPath.trim();
     print('Raw thumbnailPath: $thumbnailPath');
 
@@ -112,15 +112,15 @@ class _CourseViewScreenState extends State<CourseViewScreen>
           Text(course.title,
               style: theme.textTheme.headlineSmall
                   ?.copyWith(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text('Instructor: ${course.instructor}',
-              style: theme.textTheme.bodyMedium),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Text(course.duration, style: theme.textTheme.bodyMedium),
-            ],
-          ),
+          // const SizedBox(height: 8),
+          // Text('Instructor: ${course.instructor}',
+          //     style: theme.textTheme.bodyMedium),
+          // const SizedBox(height: 4),
+          // Row(
+          //   children: [
+          //     Text(course.duration, style: theme.textTheme.bodyMedium),
+          //   ],
+          // ),
           const SizedBox(height: 16),
           const Divider(),
           const SizedBox(height: 8),
@@ -211,7 +211,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
       final parts = rawPath.split('/');
       final filename = Uri.encodeComponent(parts.last);
       final directory = parts.sublist(0, parts.length - 1).join('/');
-      return 'https://test.rubicstechnology.com/storage/app/public/$directory/$filename';
+      return 'https://handbuch-rfc.com/storage/app/public/$directory/$filename';
     }
 
     return ListView.separated(

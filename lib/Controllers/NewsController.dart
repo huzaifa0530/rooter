@@ -6,7 +6,7 @@ import '../Models/NewsModel.dart';
 
 class NewsController extends GetxController {
   var newsList = <NewsModel>[].obs;
-  final String baseUrl = 'https://test.rubicstechnology.com/api'; 
+  final String baseUrl = 'https://handbuch-rfc.com/api'; 
 
   @override
   void onInit() {

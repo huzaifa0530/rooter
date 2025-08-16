@@ -34,7 +34,7 @@ class LoginController extends GetxController {
 
     try {
       final response = await http.post(
-        Uri.parse("https://test.rubicstechnology.com/api/login"),
+        Uri.parse("https://handbuch-rfc.com/api/login"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"email": email, "password": password}),
       );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rooster/Controllers/HandbookController.dart';
+import 'package:rooster/Controllers/HandbookController copy.dart';
 import 'package:rooster/HandbookDetailScreen.dart';
 
 class HandbookListScreen extends StatelessWidget {
@@ -76,7 +76,7 @@ class HandbookListScreen extends StatelessWidget {
                         itemBuilder: (_, index) {
                           final handbook = controller.handbooks[index];
                           final imageUrl =
-                              'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
+                              'https://handbuch-rfc.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
 
                           return SizedBox(
                             height: 2800,
@@ -164,7 +164,7 @@ class HandbookListScreen extends StatelessWidget {
                         itemBuilder: (_, index) {
                           final handbook = controller.handbooks[index];
                           final imageUrl =
-                              'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
+                              'https://handbuch-rfc.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
 
                           return Card(
                             elevation: 3,

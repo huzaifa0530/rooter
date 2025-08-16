@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rooster/controllers/login_controller.dart'; 
+import 'package:rooster/controllers/login_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -71,10 +71,13 @@ class _LoginScreenState extends State<LoginScreen>
         ),
         const SizedBox(height: 6),
         TextField(
-          controller: label == 'Username'
+          controller: label == 'Email'
               ? loginController.emailController
               : loginController.passwordController,
           obscureText: isPassword ? _obscurePwd : false,
+          keyboardType: label == 'Email'
+              ? TextInputType.emailAddress
+              : TextInputType.text,
           style: const TextStyle(color: Colors.black),
           decoration: InputDecoration(
             hintText: 'Enter your ${label.toLowerCase()}',
@@ -131,21 +134,21 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
-                  'The best fried chicken and juicy burgers\njust a tap away.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
-                ),
+                // const Text(
+                //   'The best fried chicken and juicy burgers\njust a tap away.',
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //     fontSize: 14,
+                //     color: Colors.black87,
+                //   ),
+                // ),
                 const SizedBox(height: 30),
                 FadeTransition(
                   opacity: _formFade,
                   child: Column(
                     children: [
                       _buildTextField(
-                        label: 'Username',
+                        label: 'Email',
                         icon: Icons.person,
                         theme: theme,
                       ),

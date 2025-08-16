@@ -11,7 +11,7 @@ class HandbookDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final imageUrl =
-        'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
+        'https://handbuch-rfc.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -123,7 +123,7 @@ class HandbookDetailScreen extends StatelessWidget {
 
       case ContentType.image:
         final imageUrl =
-            'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(block.data)}';
+            'https://handbuch-rfc.com/storage/app/public/${Uri.encodeFull(block.data)}';
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: ClipRRect(
@@ -145,7 +145,7 @@ class HandbookDetailScreen extends StatelessWidget {
 
       case ContentType.video:
         final videoUrl =
-            'https://test.rubicstechnology.com/storage/app/public/${Uri.encodeFull(block.data)}';
+            'https://handbuch-rfc.com/storage/app/public/${Uri.encodeFull(block.data)}';
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: VideoBlockWidget(videoUrl: videoUrl),
