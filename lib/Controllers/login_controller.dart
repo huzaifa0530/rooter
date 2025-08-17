@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rooster/Controllers/user_controller.dart';
+import 'package:rooster/config/api_config.dart';
 import '../HomeScreen.dart';
 import '../widgets/app_snackbar.dart';
 import 'package:rooster/services/api_service.dart';
@@ -34,7 +35,7 @@ class LoginController extends GetxController {
 
     try {
       final response = await http.post(
-        Uri.parse("https://handbuch-rfc.com/api/login"),
+        Uri.parse(ApiConfig.login),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"email": email, "password": password}),
       );

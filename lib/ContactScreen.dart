@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:rooster/Controllers/FeedbackController.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 import 'dart:convert';
+
 class ContactUsScreen extends StatefulWidget {
   const ContactUsScreen({super.key});
 
@@ -12,7 +14,7 @@ class ContactUsScreen extends StatefulWidget {
 
 class _ContactUsScreenState extends State<ContactUsScreen> {
   final _storage = const FlutterSecureStorage();
-
+  final FeedbackController _feedbackController = Get.put(FeedbackController());
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
@@ -33,6 +35,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -79,13 +82,34 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Get.snackbar(
-                    'thank_you'.tr,
-                    'contact_response'.tr,
-                    backgroundColor: primary,
-                    colorText: Colors.white,
+                onPressed: () async {
+                  if (_nameController.text.isEmpty ||
+                      _emailController.text.isEmpty ||
+                      _messageController.text.isEmpty) {
+                    Get.snackbar("Error", "All fields are required!");
+                    return;
+                  }
+
+                  final userJson = await _storage.read(key: 'user');
+                  int userId = 1; // default
+                  if (userJson != null) {
+                    final user = jsonDecode(userJson);
+                    userId = user['id'] ?? 1;
+                  }
+
+                  final success = await _feedbackController.submitFeedback(
+                    userId: userId,
+                    name: _nameController.text,
+                    email: _emailController.text,
+                    msg: _messageController.text,
                   );
+
+                  if (success) {
+                    _messageController.clear(); // always clear message
+                    // if you also want to clear name & email:
+                    // _nameController.clear();
+                    // _emailController.clear();
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primary,
@@ -123,7 +147,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         labelStyle: theme.textTheme.bodySmall,
         filled: true,
         fillColor: Colors.grey.shade200,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -148,7 +173,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         labelStyle: theme.textTheme.bodySmall,
         filled: true,
         fillColor: Colors.grey.shade200,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,

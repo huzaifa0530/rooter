@@ -4,9 +4,11 @@ import 'package:rooster/Models/CourseModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:rooster/config/api_config.dart';
+
 class CourseController extends GetxController {
   var courses = <CourseModel>[].obs;
-  var isLoading = false.obs; 
+  var isLoading = false.obs;
   var selectedCourse = Rxn<CourseModel>();
 
   @override
@@ -17,14 +19,14 @@ class CourseController extends GetxController {
 
   final storage = const FlutterSecureStorage();
 
-Future<String?> _getLoggedInUserId() async {
-  final userJson = await storage.read(key: 'user');
-  if (userJson != null) {
-    final userMap = jsonDecode(userJson);
-    return userMap['id']?.toString();
+  Future<String?> _getLoggedInUserId() async {
+    final userJson = await storage.read(key: 'user');
+    if (userJson != null) {
+      final userMap = jsonDecode(userJson);
+      return userMap['id']?.toString();
+    }
+    return null;
   }
-  return null;
-}
 
   Future<void> fetchCourses() async {
     isLoading.value = true;
@@ -36,13 +38,11 @@ Future<String?> _getLoggedInUserId() async {
         return;
       }
 
-      final response = await http.get(
-        Uri.parse(
-            'https://handbuch-rfc.com/api/courses/list/$userId'),
-      );
+      final response =
+          await http.get(Uri.parse(ApiConfig.coursesList(int.parse(userId))));
       if (response.statusCode == 200) {
         final jsonBody = jsonDecode(response.body);
-        List data = jsonBody; 
+        List data = jsonBody;
         courses.value = data.map((e) => CourseModel.fromJson(e)).toList();
       } else {
         print('Failed to load courses. Status: ${response.statusCode}');
@@ -57,15 +57,16 @@ Future<String?> _getLoggedInUserId() async {
   Future<void> fetchCourseDetail(int courseId) async {
     isLoading.value = true;
     try {
-            final userId = await _getLoggedInUserId();
+      final userId = await _getLoggedInUserId();
       if (userId == null) {
         print("⚠ No logged-in user ID found.");
         isLoading.value = false;
         return;
       }
-      final response = await http.get(
-          Uri.parse('https://handbuch-rfc.com/api/courses/$courseId/$userId'));
-
+      // final response = await http.get(
+      //     Uri.parse('https://handbuch-rfc.com/api/courses/$courseId/$userId'));
+      final response = await http
+          .get(Uri.parse(ApiConfig.userCourses(courseId, int.parse(userId))));
       // print('Course Detail Status Code: ${response.statusCode}');
       // print('Course Detail Response: ${response.body}');
 
@@ -93,18 +94,17 @@ Future<String?> _getLoggedInUserId() async {
     }
   }
 
-
-  Future<CourseModel?> fetchCourseById(int id) async {
-    final url = 'https://handbuch-rfc.com/api/courses/$id';
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        return CourseModel.fromJson(jsonData['data']);
-      }
-    } catch (e) {
-      print('Error fetching course: $e');
-    }
-    return null;
-  }
+  // Future<CourseModel?> fetchCourseById(int id) async {
+  //   final url = 'https://handbuch-rfc.com/api/courses/$id';
+  //   try {
+  //     final response = await http.get(Uri.parse(url));
+  //     if (response.statusCode == 200) {
+  //       final jsonData = json.decode(response.body);
+  //       return CourseModel.fromJson(jsonData['data']);
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching course: $e');
+  //   }
+  //   return null;
+  // }
 }

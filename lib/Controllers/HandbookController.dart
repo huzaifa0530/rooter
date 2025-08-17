@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:rooster/Models/Handbook.dart';
+import 'package:rooster/config/api_config.dart';
 import 'package:rooster/services/handbook_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -66,8 +67,9 @@ class HandbookController extends GetxController {
 
     Future<Handbook?> fetchHandbookDetail(int id) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/handbooks/$id'));
-
+      // final response = await http.get(Uri.parse('$baseUrl/handbooks/$id'));
+      final response = await http
+          .get(Uri.parse(ApiConfig.handbookById(id)));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body)['data'];
         return Handbook.fromJson(data);

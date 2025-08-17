@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooster/Models/Handbook.dart';
+import 'package:rooster/config/api_config.dart';
 import 'package:video_player/video_player.dart';
 
 class HandbookDetailScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class HandbookDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final imageUrl =
-        'https://handbuch-rfc.com/storage/app/public/${Uri.encodeFull(handbook.thumbnailUrl)}';
+        '${ApiConfig.storageBaseUrl}/${Uri.encodeFull(handbook.thumbnailUrl)}';
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -123,7 +124,9 @@ class HandbookDetailScreen extends StatelessWidget {
 
       case ContentType.image:
         final imageUrl =
-            'https://handbuch-rfc.com/storage/app/public/${Uri.encodeFull(block.data)}';
+            '${ApiConfig.storageBaseUrl}/${Uri.encodeFull(block.data)}';
+           
+
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: ClipRRect(
@@ -145,7 +148,7 @@ class HandbookDetailScreen extends StatelessWidget {
 
       case ContentType.video:
         final videoUrl =
-            'https://handbuch-rfc.com/storage/app/public/${Uri.encodeFull(block.data)}';
+            '${ApiConfig.storageBaseUrl}/${Uri.encodeFull(block.data)}';
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: VideoBlockWidget(videoUrl: videoUrl),

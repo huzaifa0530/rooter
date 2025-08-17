@@ -129,6 +129,7 @@ class HandbookBrowserScreen extends StatelessWidget {
                                     hb.thumbnailUrl.isNotEmpty
                                         ? Image.network(
                                             "https://handbuch-rfc.com/storage/app/public/${hb.thumbnailUrl}",
+                                       
                                             height: 140,
                                             width: double.infinity,
                                             fit: BoxFit.cover,

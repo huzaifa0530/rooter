@@ -3,6 +3,7 @@ import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/PdfViewerScreen.dart';
 import 'package:chewie/chewie.dart';
 import 'package:get/get.dart';
+import 'package:rooster/config/api_config.dart';
 import 'package:rooster/controllers/lecture_controller.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 
@@ -76,10 +77,8 @@ class _CourseViewScreenState extends State<CourseViewScreen>
   }
 
   Widget _buildOverviewTab(CourseModel course, ThemeData theme) {
-    String baseUrl = 'https://handbuch-rfc.com/storage/app/public/';
+    String baseUrl = '${ApiConfig.storageBaseUrl}/';
     String thumbnailPath = course.thumbnailPath.trim();
-    print('Raw thumbnailPath: $thumbnailPath');
-
     String imageUrl;
 
     if (thumbnailPath.toLowerCase().startsWith('http')) {
@@ -188,7 +187,6 @@ class _CourseViewScreenState extends State<CourseViewScreen>
                       trailing: const Icon(Icons.play_circle_fill,
                           color: Colors.deepPurple),
                       onTap: () async {
-                      
                         if (!lecture.isViewed) {
                           lecture.isViewed = true;
                           setState(() {});
@@ -211,7 +209,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
       final parts = rawPath.split('/');
       final filename = Uri.encodeComponent(parts.last);
       final directory = parts.sublist(0, parts.length - 1).join('/');
-      return 'https://handbuch-rfc.com/storage/app/public/$directory/$filename';
+      return '${ApiConfig.storageBaseUrl}/$directory/$filename';
     }
 
     return ListView.separated(

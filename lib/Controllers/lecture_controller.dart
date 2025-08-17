@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:rooster/config/api_config.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import '../Models/CourseModel.dart';
@@ -73,7 +74,7 @@ class LectureController extends GetxController {
     try {
       final userId = await _getLoggedInUserId();
       final response = await http.post(
-        Uri.parse("https://handbuch-rfc.com/api/course-progress"),
+        Uri.parse(ApiConfig.courseProgress),
         headers: {
           'Content-Type': 'application/json',
         },

@@ -9,6 +9,7 @@ import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/NewsDetailScreen.dart';
 import 'package:rooster/NewsListScreen.dart';
 import 'package:rooster/Widgets/custom_drawer.dart';
+import 'package:rooster/config/api_config.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -233,7 +234,7 @@ class HomeScreen extends StatelessWidget {
                 final newsItem = newsList[index];
                 String fullImageUrl = newsItem.imagePath.startsWith('http')
                     ? newsItem.imagePath
-                    : 'https://handbuch-rfc.com/storage/app/public/${newsItem.imagePath}';
+                    : '${ApiConfig.storageBaseUrl}/${newsItem.imagePath}';
 
                 return GestureDetector(
                   onTap: () {

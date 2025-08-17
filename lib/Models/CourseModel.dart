@@ -135,7 +135,7 @@ class LectureModel {
     ];
     final uri = Uri(
       scheme: 'https',
-      host: 'test.rubicstechnology.com',
+      host: 'handbuch-rfc.com',
       pathSegments: pathSegments,
     );
     return uri.toString();

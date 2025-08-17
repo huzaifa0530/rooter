@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:rooster/Controllers/NewsController.dart';
+import 'package:rooster/config/api_config.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 import 'dart:convert';
 import 'package:video_player/video_player.dart';
@@ -10,57 +15,35 @@ import '../Models/NewsModel.dart';
 class NewsDetailScreen extends StatelessWidget {
   final NewsModel news;
 
-  const NewsDetailScreen({super.key, required this.news});
+  NewsDetailScreen({super.key, required this.news});
 
-  Future<NewsModel> fetchNewsDetail() async {
-    final String url = 'https://handbuch-rfc.com/api/news/${news.id}';
-
-    try {
-      final response = await http.get(Uri.parse(url));
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        return NewsModel.fromJson(jsonData['data']);
-      } else {
-        throw Exception(
-            'Failed to load news detail. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Fetch error: $e');
-      rethrow;
-    }
-  }
-
+  final NewsController controller = Get.put(NewsController());
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    controller.fetchNewsDetail(news.id);
     return MainScaffold(
       title: 'Rooster',
       currentIndex: null,
       body: SafeArea(
-        child: FutureBuilder<NewsModel>(
-          future: fetchNewsDetail(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+        child: Obx(
+          () {
+            if (controller.isLoading.value) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (snapshot.hasError || !snapshot.hasData) {
-              return const Center(child: Text('Failed to load news'));
+            if (controller.newsDetail.value == null) {
+              return const Center(child: Text("Failed to load news"));
             }
 
-            final updatedNews = snapshot.data!;
-
+            final updatedNews = controller.newsDetail.value!;
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(14),
                   child: Image.network(
-                    'https://handbuch-rfc.com/storage/app/public/${updatedNews.imagePath}',
+                    '${ApiConfig.storageBaseUrl}/${updatedNews.imagePath}',
                     fit: BoxFit.cover,
                     height: 220,
                     width: double.infinity,
@@ -124,7 +107,7 @@ class NewsDetailScreen extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
-                              'https://handbuch-rfc.com/storage/app/public/${block.mediaPath}',
+                              '${ApiConfig.storageBaseUrl}/${block.mediaPath}',
                               width: double.infinity,
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) =>
@@ -143,7 +126,7 @@ class NewsDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                             child: VideoPlayerWidget(
                               videoUrl:
-                                  'https://handbuch-rfc.com/storage/app/public/${block.mediaPath}',
+                                  '${ApiConfig.storageBaseUrl}/${block.mediaPath}',
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -187,9 +170,6 @@ class NewsDetailScreen extends StatelessWidget {
                 //     ],
                 //   ),
                 // ),
-          
-          
-          
               ],
             );
           },

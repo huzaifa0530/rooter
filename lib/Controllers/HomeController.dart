@@ -4,13 +4,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/Models/NewsModel.dart';
+import 'package:rooster/config/api_config.dart';
 
 class HomeController extends GetxController {
   var newsList = <NewsModel>[].obs;
   var courseList = <CourseModel>[].obs;
   var isLoading = false.obs;
 
-  final String baseUrl = 'https://handbuch-rfc.com/api';
+  // final String baseUrl = 'https://handbuch-rfc.com/api';
 
   @override
   void onInit() {
@@ -38,8 +39,9 @@ class HomeController extends GetxController {
         isLoading.value = false;
         return;
       }
-      final response = await http.get(Uri.parse('$baseUrl/home/$userId'));
-
+      // final response = await http.get(Uri.parse('$baseUrl/home/$userId'));
+      final response = await http
+          .get(Uri.parse(ApiConfig.homeData(int.parse(userId))));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         // print("Home API response: $data");

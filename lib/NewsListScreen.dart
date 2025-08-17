@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rooster/NewsDetailScreen.dart';
+import 'package:rooster/config/api_config.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 import 'package:rooster/Controllers/NewsController.dart';
 
@@ -65,7 +66,7 @@ class NewsListScreen extends StatelessWidget {
                                   top: Radius.circular(14),
                                 ),
                                 child: Image.network(
-                                  'https://handbuch-rfc.com/storage/app/public/${news.imagePath}',
+                                  '${ApiConfig.storageBaseUrl}/${news.imagePath}',
                                   height: 180,
                                   width: double.infinity,
                                   fit: BoxFit.cover,

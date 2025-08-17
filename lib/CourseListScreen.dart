@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooster/CourseViewScreen.dart';
 import 'package:rooster/Controllers/course_controller.dart';
+import 'package:rooster/config/api_config.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
 
 class CourseListScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class CourseListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final controller = Get.find<CourseController>(); 
+    final controller = Get.find<CourseController>();
 
     return MainScaffold(
       title: 'latest_courses',
@@ -55,7 +56,7 @@ class CourseListScreen extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                            'https://handbuch-rfc.com/storage/app/public/${course.thumbnailPath}',
+                            '${ApiConfig.storageBaseUrl}/${course.thumbnailPath}',
                             width: 80,
                             height: 80,
                             fit: BoxFit.cover,
