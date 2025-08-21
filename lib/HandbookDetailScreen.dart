@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooster/Models/Handbook.dart';
+import 'package:rooster/PdfViewerScreen.dart';
 import 'package:rooster/config/api_config.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 class HandbookDetailScreen extends StatelessWidget {
@@ -21,7 +23,7 @@ class HandbookDetailScreen extends StatelessWidget {
           children: [
             // const Icon(Icons.restaurant_menu, size: 24),
             // const SizedBox(width: 2),
-            Text('chef_handbook'.tr),
+            Text('handbook'.tr),
           ],
         ),
       ),
@@ -110,51 +112,106 @@ class HandbookDetailScreen extends StatelessWidget {
       ),
     );
   }
+Widget _buildContentBlock(HandbookContent block) {
+  switch (block.type) {
+    case ContentType.text:
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Text(
+          block.data,
+          style: const TextStyle(fontSize: 16, height: 1.6),
+        ),
+      );
 
-  Widget _buildContentBlock(HandbookContent block) {
-    switch (block.type) {
-      case ContentType.text:
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Text(
-            block.data,
-            style: const TextStyle(fontSize: 16, height: 1.6),
-          ),
-        );
-
-      case ContentType.image:
-        final imageUrl =
-            '${ApiConfig.storageBaseUrl}/${Uri.encodeFull(block.data)}';
-           
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              imageUrl,
+    case ContentType.image:
+      final imageUrl =
+          '${ApiConfig.storageBaseUrl}/${Uri.encodeFull(block.data)}';
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.network(
+            imageUrl,
+            height: 200,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Image.asset(
+              'assets/images/no_image.jpg',
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Image.asset(
-                'assets/images/no_image.jpg',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
             ),
           ),
-        );
+        ),
+      );
 
-      case ContentType.video:
-        final videoUrl =
-            '${ApiConfig.storageBaseUrl}/${Uri.encodeFull(block.data)}';
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: VideoBlockWidget(videoUrl: videoUrl),
-        );
-    }
+    case ContentType.video:
+      final videoUrl =
+          '${ApiConfig.storageBaseUrl}/${Uri.encodeFull(block.data)}';
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: VideoBlockWidget(videoUrl: videoUrl),
+      );
+
+    case ContentType.document:
+      final docUrl =
+          '${ApiConfig.storageBaseUrl}/${Uri.encodeFull(block.data)}';
+      final fileName = block.data.split('/').last;
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: InkWell(
+          onTap: () {
+            if (fileName.toLowerCase().endsWith(".pdf")) {
+              Get.to(() => PdfViewerScreen(path: docUrl));
+            } else {
+              launchUrl(Uri.parse(docUrl), mode: LaunchMode.externalApplication);
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 6,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  fileName.toLowerCase().endsWith(".pdf")
+                      ? Icons.picture_as_pdf
+                      : Icons.insert_drive_file,
+                  color: fileName.toLowerCase().endsWith(".pdf")
+                      ? Colors.red
+                      : Colors.blue,
+                  size: 32,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    fileName,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87),
+                  ),
+                ),
+                const Icon(Icons.arrow_forward_ios,
+                    size: 18, color: Colors.black45),
+              ],
+            ),
+          ),
+        ),
+      );
   }
+}
 
   /// 🔖 Tag widget builder
   Widget _buildTag(String tag, ThemeData theme) {

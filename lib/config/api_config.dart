@@ -1,6 +1,6 @@
 class ApiConfig {
-  static const String baseUrl = "https://handbuch-rfc.com/api";
-  static const String storageBaseUrl = "https://handbuch-rfc.com/storage/app/public";
+  static const String baseUrl = "https://test.rubicstechnology.com/api";
+  static const String storageBaseUrl = "https://test.rubicstechnology.com/storage/app/public";
   // 🔹 Auth
   static const String login = "$baseUrl/login";
   static const String register = "$baseUrl/register";

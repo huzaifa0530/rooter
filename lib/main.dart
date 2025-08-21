@@ -13,8 +13,8 @@ import 'package:rooster/config/translations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseConfig.initializeApp();
-  Get.put(CourseController());
-  Get.put(UserController());
+  // Get.put(CourseController());
+  // Get.put(UserController());
 
   runApp(const RoosterApp());
 }

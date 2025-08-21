@@ -13,8 +13,16 @@ class CourseController extends GetxController {
 
   @override
   void onInit() {
-    fetchCourses();
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    fetchCourses();
+    print('fetchCourses() called');
+
+    print('courses after decode: ${courses.length}');
   }
 
   final storage = const FlutterSecureStorage();
@@ -23,8 +31,10 @@ class CourseController extends GetxController {
     final userJson = await storage.read(key: 'user');
     if (userJson != null) {
       final userMap = jsonDecode(userJson);
+
       return userMap['id']?.toString();
     }
+    print('userJson from storage: $userJson');
     return null;
   }
 
@@ -37,7 +47,6 @@ class CourseController extends GetxController {
         isLoading.value = false;
         return;
       }
-
       final response =
           await http.get(Uri.parse(ApiConfig.coursesList(int.parse(userId))));
       if (response.statusCode == 200) {
@@ -93,18 +102,4 @@ class CourseController extends GetxController {
       isLoading.value = false;
     }
   }
-
-  // Future<CourseModel?> fetchCourseById(int id) async {
-  //   final url = 'https://handbuch-rfc.com/api/courses/$id';
-  //   try {
-  //     final response = await http.get(Uri.parse(url));
-  //     if (response.statusCode == 200) {
-  //       final jsonData = json.decode(response.body);
-  //       return CourseModel.fromJson(jsonData['data']);
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching course: $e');
-  //   }
-  //   return null;
-  // }
 }

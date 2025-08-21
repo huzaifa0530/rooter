@@ -12,7 +12,6 @@ class CourseListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final controller = Get.find<CourseController>();
-
     return MainScaffold(
       title: 'latest_courses',
       currentIndex: 1,

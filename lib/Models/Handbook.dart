@@ -1,13 +1,21 @@
 // models/handbook.dart
 
-enum ContentType { text, image, video }
+// models/handbook.dart
+enum ContentType { text, image, video, document }
 
-ContentType parseContentType(String type) {
+ContentType parseContentType(String type, String data) {
+  final ext = data.split('.').last.toLowerCase();
+
   switch (type.toLowerCase()) {
     case 'image':
       return ContentType.image;
     case 'video':
       return ContentType.video;
+    case 'document':
+      if (['pdf', 'doc', 'docx', 'xls', 'xlsx'].contains(ext)) {
+        return ContentType.document;
+      }
+      return ContentType.text;
     default:
       return ContentType.text;
   }
@@ -59,10 +67,13 @@ class HandbookContent {
   });
 
   factory HandbookContent.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] ?? '';
+    final type = json['type'] ?? 'text';
+
     return HandbookContent(
-      type: parseContentType(json['type'] ?? 'text'),
-      data: json['data'] ?? '',
+      type: parseContentType(type, data),
+      data: data,
       position: int.tryParse(json['position']?.toString() ?? '0') ?? 0,
     );
   }
-}
+l;}

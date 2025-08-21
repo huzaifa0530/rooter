@@ -8,8 +8,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class FirebaseConfig {
   static Future<void> initializeApp() async {
     await Firebase.initializeApp();
-    Get.put(CourseController());
-    final userController = Get.put(UserController());
+    
+    final courseController = Get.put(CourseController());
+    await courseController.fetchCourses();
+    final userController = Get.put(UserController());    
     await userController.init();
     if (!kIsWeb) {
       await NotificationService.initializeFCM();
