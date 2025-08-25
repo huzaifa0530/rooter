@@ -125,18 +125,17 @@ class LectureModel {
   });
   String get videoUrl {
     final trimmed = path.trim();
-    if (trimmed.toLowerCase().startsWith('http')) return trimmed;
 
-    final pathSegments = <String>[
-      'storage',
-      'app',
-      'public',
-      ...trimmed.split('/').where((s) => s.isNotEmpty)
-    ];
+    // Case 1: Already a full URL
+    if (trimmed.toLowerCase().startsWith('http')) {
+      return Uri.encodeFull(trimmed);
+    }
+
+    // Case 2: Relative path from API (fallback)
     final uri = Uri(
       scheme: 'https',
       host: 'handbuch-rfc.com',
-      pathSegments: pathSegments,
+      path: 'storage/app/public/$trimmed',
     );
     return uri.toString();
   }

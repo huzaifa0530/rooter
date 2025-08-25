@@ -206,10 +206,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
 
   Widget _buildResourcesTab(List<ResourceModel> resources, ThemeData theme) {
     String buildResourceUrl(String rawPath) {
-      final parts = rawPath.split('/');
-      final filename = Uri.encodeComponent(parts.last);
-      final directory = parts.sublist(0, parts.length - 1).join('/');
-      return '${ApiConfig.storageBaseUrl}/$directory/$filename';
+      return Uri.encodeFull(rawPath); 
     }
 
     return ListView.separated(

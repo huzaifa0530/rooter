@@ -76,8 +76,8 @@ class CourseController extends GetxController {
       //     Uri.parse('https://handbuch-rfc.com/api/courses/$courseId/$userId'));
       final response = await http
           .get(Uri.parse(ApiConfig.userCourses(courseId, int.parse(userId))));
-      // print('Course Detail Status Code: ${response.statusCode}');
-      // print('Course Detail Response: ${response.body}');
+      print('Course Detail Status Code: ${response.statusCode}');
+      print('Course Detail Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);

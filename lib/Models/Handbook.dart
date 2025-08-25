@@ -76,4 +76,4 @@ class HandbookContent {
       position: int.tryParse(json['position']?.toString() ?? '0') ?? 0,
     );
   }
-l;}
+}

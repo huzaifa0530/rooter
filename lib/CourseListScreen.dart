@@ -55,7 +55,7 @@ class CourseListScreen extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                            '${ApiConfig.storageBaseUrl}/${course.thumbnailPath}',
+                            '${course.thumbnailPath}',
                             width: 80,
                             height: 80,
                             fit: BoxFit.cover,
