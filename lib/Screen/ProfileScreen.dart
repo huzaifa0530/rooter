@@ -104,8 +104,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             // 👤 User Info
             Text("user_info".tr,
-                style: const TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold)),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             _buildProfileTile(
                 icon: Icons.person,
@@ -132,8 +132,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             // 🏢 Franchise Info
             Text("franchise_info".tr,
-                style: const TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold)),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             _buildProfileTile(
                 icon: Icons.store,
@@ -179,19 +179,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               final bool isSelected = currentLocale == lang['locale'];
 
               return Card(
-                color: isSelected
-                    ? theme.colorScheme.secondary.withOpacity(0.1)
-                    : null,
+                // color: isSelected
+                //     ? theme.colorScheme.secondary.withOpacity(0.15)
+                //     : null,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                  side: isSelected
+                      ? BorderSide(color: theme.primaryColor, width: 1)
+                      : BorderSide.none,
+                ),
                 child: ListTile(
                   leading: Icon(lang['icon'], color: theme.primaryColor),
                   title: Text(
                     lang['label'],
                     style: TextStyle(
                       fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: Colors.black,
+                          isSelected ? FontWeight.normal : FontWeight.normal,
+                      color: isSelected ? theme.primaryColor : Colors.black,
                     ),
                   ),
                   trailing: isSelected

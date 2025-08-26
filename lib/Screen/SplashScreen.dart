@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:rooster/LoginScreen.dart';
-import 'package:rooster/HomeScreen.dart';
+import 'package:rooster/Screen/HomeScreen.dart';
+import 'package:rooster/Screen/LoginScreen.dart';
 import 'package:rooster/services/api_service.dart';
 
 import 'package:rooster/services/notification_service.dart';

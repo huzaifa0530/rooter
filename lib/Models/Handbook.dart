@@ -57,7 +57,7 @@ class Handbook {
 
 class HandbookContent {
   final ContentType type;
-  final String data; // Could be text, image URL, or video URL
+  final String data;
   final int position;
 
   HandbookContent({

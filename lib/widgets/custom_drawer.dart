@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooster/Controllers/user_controller.dart';
-import 'package:rooster/ContactScreen.dart';
-import 'package:rooster/LoginScreen.dart';
-import 'package:rooster/ProfileScreen.dart';
+import 'package:rooster/Screen/ContactScreen.dart';
+import 'package:rooster/Screen/LoginScreen.dart';
+import 'package:rooster/Screen/ProfileScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class CustomDrawer extends StatelessWidget {

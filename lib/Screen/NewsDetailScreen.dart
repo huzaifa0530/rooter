@@ -3,13 +3,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:rooster/Controllers/NewsController.dart';
 import 'package:rooster/config/api_config.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
-import 'dart:convert';
-import 'package:video_player/video_player.dart';
-
+import 'package:rooster/widgets/VideoPlayerWidget.dart';
+import 'package:rooster/widgets/tag_widget.dart';
 import '../Models/NewsModel.dart';
 
 class NewsDetailScreen extends StatelessWidget {
@@ -20,7 +18,6 @@ class NewsDetailScreen extends StatelessWidget {
   final NewsController controller = Get.put(NewsController());
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     controller.fetchNewsDetail(news.id);
     return MainScaffold(
       title: 'Rooster',
@@ -91,7 +88,8 @@ class NewsDetailScreen extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   children: updatedNews.tags
-                      .map((tag) => _buildChip(tag, theme))
+                      .map((tag) =>
+                          TagWidget(tag: tag, theme: Theme.of(context)))
                       .toList(),
                 ),
 
@@ -124,11 +122,18 @@ class NewsDetailScreen extends StatelessWidget {
                           const SizedBox(height: 8),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: VideoPlayerWidget(
-                              videoUrl:
-                                  '${ApiConfig.storageBaseUrl}/${block.mediaPath}',
+                            child: SizedBox(
+                              height: 220, // pick a safe height
+                              width: double.infinity,
+                              child: VideoPlayerWidget(
+                                videoUrl:
+                                    '${ApiConfig.storageBaseUrl}/${block.mediaPath}',
+                                autoPlay: true,
+                                looping: true,
+                              ),
                             ),
                           ),
+
                           const SizedBox(height: 6),
                           // Text(
                           //   'Video: ${block.mediaPath.split('/').last}',
@@ -178,96 +183,5 @@ class NewsDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildChip(String label, ThemeData theme) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        border:
-            Border.all(color: theme.primaryColor.withOpacity(0.6), width: 1),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.local_fire_department,
-              size: 16, color: theme.primaryColor),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: theme.primaryColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
-class VideoPlayerWidget extends StatefulWidget {
-  final String videoUrl;
-
-  const VideoPlayerWidget({super.key, required this.videoUrl});
-
-  @override
-  State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
-}
-
-class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  late VideoPlayerController _controller;
-  bool _isPlaying = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {});
-      });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _togglePlayPause() {
-    setState(() {
-      _isPlaying ? _controller.pause() : _controller.play();
-      _isPlaying = !_isPlaying;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _controller.value.isInitialized
-        ? Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              ),
-              VideoProgressIndicator(_controller, allowScrubbing: true),
-              Positioned(
-                bottom: 10,
-                right: 10,
-                child: FloatingActionButton(
-                  mini: true,
-                  onPressed: _togglePlayPause,
-                  child: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-                ),
-              ),
-            ],
-          )
-        : const Center(child: CircularProgressIndicator());
-  }
 }

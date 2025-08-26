@@ -14,15 +14,7 @@ class CourseController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
     fetchCourses();
-    print('fetchCourses() called');
-
-    print('courses after decode: ${courses.length}');
   }
 
   final storage = const FlutterSecureStorage();
@@ -34,7 +26,7 @@ class CourseController extends GetxController {
 
       return userMap['id']?.toString();
     }
-    print('userJson from storage: $userJson');
+    // print('userJson from storage: $userJson');
     return null;
   }
 
@@ -43,7 +35,7 @@ class CourseController extends GetxController {
     try {
       final userId = await _getLoggedInUserId();
       if (userId == null) {
-        print("⚠ No logged-in user ID found.");
+        // print("⚠ No logged-in user ID found.");
         isLoading.value = false;
         return;
       }
@@ -76,8 +68,8 @@ class CourseController extends GetxController {
       //     Uri.parse('https://handbuch-rfc.com/api/courses/$courseId/$userId'));
       final response = await http
           .get(Uri.parse(ApiConfig.userCourses(courseId, int.parse(userId))));
-      print('Course Detail Status Code: ${response.statusCode}');
-      print('Course Detail Response: ${response.body}');
+      // print('Course Detail Status Code: ${response.statusCode}');
+      // print('Course Detail Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);

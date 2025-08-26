@@ -7,8 +7,7 @@ import 'package:rooster/config/api_config.dart';
 
 class FeedbackController extends GetxController {
   var isLoading = false.obs;
-
-  Future<bool> submitFeedback({
+  Future<FeedbackModel?> submitFeedback({
     required int userId,
     required String name,
     required String email,
@@ -30,20 +29,23 @@ class FeedbackController extends GetxController {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Get.snackbar(
-            "Success", data["message"] ?? "Feedback submitted successfully!");
-        debugPrint("✅ Feedback submitted: ${response.body}");
-        return true;
-      } else {
-        debugPrint("❌ API Error: ${response.statusCode} ${response.body}");
-        Get.snackbar("Error", data["message"] ?? "Failed to submit feedback.");
-        return false;
+        if (data["feedback"] != null) {
+          final feedback = FeedbackModel.fromJson(data["feedback"]);
+          Get.snackbar("Success", data["message"] ?? "Feedback submitted!");
+          // debugPrint("✅ Feedback submitted: ${feedback.msg}");
+          return feedback;
+        } else {
+          Get.snackbar("Success", data["message"] ?? "Feedback submitted!");
+          // debugPrint(
+          //     "✅ Feedback submitted but no feedback object in response.");
+          return null;
+        }
       }
     } catch (e, stack) {
       debugPrint("❌ Exception in submitFeedback: $e");
       debugPrintStack(stackTrace: stack);
       Get.snackbar("Error", "An unexpected error occurred.");
-      return false;
+      return null;
     } finally {
       isLoading.value = false;
     }

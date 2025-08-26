@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
-import 'package:rooster/CourseViewScreen.dart';
 import 'package:rooster/Models/CourseModel.dart';
 import 'package:rooster/Models/NewsModel.dart';
-import 'package:rooster/NewsDetailScreen.dart';
+import 'package:rooster/Screen/CourseViewScreen.dart';
+import 'package:rooster/Screen/NewsDetailScreen.dart';
 import 'package:rooster/config/api_config.dart';
 
 import 'package:rooster/models/handbook.dart';

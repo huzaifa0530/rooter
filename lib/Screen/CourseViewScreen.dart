@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rooster/Models/CourseModel.dart';
-import 'package:rooster/PdfViewerScreen.dart';
 import 'package:chewie/chewie.dart';
 import 'package:get/get.dart';
+import 'package:rooster/Screen/PdfViewerScreen.dart';
 import 'package:rooster/config/api_config.dart';
 import 'package:rooster/controllers/lecture_controller.dart';
 import 'package:rooster/widgets/MainScaffold.dart';
@@ -41,31 +41,33 @@ class _CourseViewScreenState extends State<CourseViewScreen>
     return MainScaffold(
       title: 'latest_courses',
       currentIndex: 1,
-      customAppBar: AppBar(
-        title: const Text('ROOSTER'),
-        backgroundColor: theme.primaryColor,
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          indicatorColor: Colors.white,
-          indicatorWeight: 3,
-          indicator: const UnderlineTabIndicator(
-            borderSide: BorderSide(width: 3.0, color: Colors.white),
-            insets: EdgeInsets.symmetric(horizontal: 16),
-          ),
-          labelStyle:
-              const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          unselectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
-          tabs: [
-            Tab(text: 'overview'.tr),
-            Tab(text: 'content'.tr),
-            Tab(text: 'resources'.tr),
-          ],
-        ),
+  customAppBar: AppBar(
+  title: const Text('ROOSTER'),
+  backgroundColor: theme.primaryColor,
+  elevation: 0, // 👈 removes shadow
+  scrolledUnderElevation: 0, // 👈 for Material 3
+  bottom: PreferredSize(
+    preferredSize: const Size.fromHeight(48),
+    child: TabBar(
+      controller: _tabController,
+      labelColor: Colors.white,
+      unselectedLabelColor: Colors.white70,
+      indicator: const UnderlineTabIndicator(
+        borderSide: BorderSide(width: 3.0, color: Colors.white),
+        insets: EdgeInsets.symmetric(horizontal: 16),
       ),
-      body: TabBarView(
+      labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      unselectedLabelStyle:
+          const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+      tabs: [
+        Tab(text: 'overview'.tr),
+        Tab(text: 'content'.tr),
+        Tab(text: 'resources'.tr),
+      ],
+    ),
+  ),
+),
+    body: TabBarView(
         controller: _tabController,
         children: [
           _buildOverviewTab(course, theme),
@@ -206,7 +208,7 @@ class _CourseViewScreenState extends State<CourseViewScreen>
 
   Widget _buildResourcesTab(List<ResourceModel> resources, ThemeData theme) {
     String buildResourceUrl(String rawPath) {
-      return Uri.encodeFull(rawPath); 
+      return Uri.encodeFull(rawPath);
     }
 
     return ListView.separated(

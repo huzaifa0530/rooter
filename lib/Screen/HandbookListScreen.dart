@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooster/Controllers/HandbookController copy.dart';
-import 'package:rooster/HandbookDetailScreen.dart';
+import 'package:rooster/Screen/HandbookDetailScreen.dart';
+
 
 class HandbookListScreen extends StatelessWidget {
   const HandbookListScreen({super.key});

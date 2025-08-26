@@ -91,24 +91,22 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                   }
 
                   final userJson = await _storage.read(key: 'user');
-                  int userId = 1; // default
+                  int userId = 1; 
                   if (userJson != null) {
                     final user = jsonDecode(userJson);
                     userId = user['id'] ?? 1;
                   }
 
-                  final success = await _feedbackController.submitFeedback(
+                  final feedback = await _feedbackController.submitFeedback(
                     userId: userId,
                     name: _nameController.text,
                     email: _emailController.text,
                     msg: _messageController.text,
                   );
 
-                  if (success) {
-                    _messageController.clear(); // always clear message
-                    // if you also want to clear name & email:
-                    // _nameController.clear();
-                    // _emailController.clear();
+                  if (feedback != null) {
+                    _messageController.clear();
+                    debugPrint("Feedback saved with id: ${feedback.id}");
                   }
                 },
                 style: ElevatedButton.styleFrom(

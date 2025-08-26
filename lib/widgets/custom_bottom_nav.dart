@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rooster/HomeScreen.dart';
-import 'package:rooster/CourseListScreen.dart';
-import 'package:rooster/NewsListScreen.dart';
-import 'package:rooster/ProfileScreen.dart';
+import 'package:rooster/Screen/HomeScreen.dart';
+import 'package:rooster/Screen/CourseListScreen.dart';
+import 'package:rooster/Screen/NewsListScreen.dart';
+import 'package:rooster/Screen/ProfileScreen.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int? currentIndex; 

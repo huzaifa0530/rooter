@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooster/Controllers/HandbookController.dart';
-import 'package:rooster/HandbookDetailScreen.dart';
+import 'package:rooster/Screen/HandbookDetailScreen.dart';
 
 class HandbookBrowserScreen extends StatelessWidget {
   const HandbookBrowserScreen({Key? key}) : super(key: key);
@@ -153,7 +153,7 @@ class HandbookBrowserScreen extends StatelessWidget {
                                 children: [
                                   hb.thumbnailUrl.isNotEmpty
                                       ? Image.network(
-                                          "https://handbuch-rfc.com/storage/app/public/${hb.thumbnailUrl}",
+                                          "${hb.thumbnailUrl}",
                                           height: 140,
                                           width: double.infinity,
                                           fit: BoxFit.cover,

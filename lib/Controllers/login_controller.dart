@@ -4,12 +4,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rooster/Controllers/user_controller.dart';
+import 'package:rooster/Screen/HomeScreen.dart';
 import 'package:rooster/config/api_config.dart';
-import '../HomeScreen.dart';
-import '../widgets/app_snackbar.dart';
 import 'package:rooster/services/api_service.dart';
-
 import 'package:rooster/services/notification_service.dart';
+import 'package:rooster/widgets/app_snackbar.dart';
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
