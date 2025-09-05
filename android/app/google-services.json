@@ -1,32 +1,13 @@
 {
   "project_info": {
-    "project_number": "274306580161",
-    "project_id": "rooster-handbunch",
-    "storage_bucket": "rooster-handbunch.firebasestorage.app"
+    "project_number": "86783203189",
+    "project_id": "rooster-handbuch",
+    "storage_bucket": "rooster-handbuch.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:274306580161:android:286c66e806076749fbde40",
-        "android_client_info": {
-          "package_name": "com.example.rooster"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAJPo4au6JoZTc3A71SxzDR5vT-Z1ZNujs"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:274306580161:android:26114e2be6d17dccfbde40",
+        "mobilesdk_app_id": "1:86783203189:android:682e9a1ca79fb84866a53c",
         "android_client_info": {
           "package_name": "com.rooster.handbuch"
         }
@@ -34,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAJPo4au6JoZTc3A71SxzDR5vT-Z1ZNujs"
+          "current_key": "AIzaSyBRdU7uNX1n22C4Kmzld6BQW-qKL6_7nhU"
         }
       ],
       "services": {

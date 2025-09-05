@@ -126,12 +126,11 @@ class LectureModel {
   String get videoUrl {
     final trimmed = path.trim();
 
-    // Case 1: Already a full URL
+
     if (trimmed.toLowerCase().startsWith('http')) {
       return Uri.encodeFull(trimmed);
     }
 
-    // Case 2: Relative path from API (fallback)
     final uri = Uri(
       scheme: 'https',
       host: 'handbuch-rfc.com',
