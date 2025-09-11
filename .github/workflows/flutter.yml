@@ -37,21 +37,21 @@ jobs:
       - name: Override Gradle JVM options (CI only)
         run: echo "org.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError" >> android/gradle.properties
 
-      - name: Build AAB
-        run: flutter build appbundle --release
+      # - name: Build AAB
+      #   run: flutter build appbundle --release
 
       # ✅ Correctly place google_play_key.json
-      - name: Write google_play_key.json safely
-        run: |
-         echo "${{ secrets.GOOGLE_PLAY_KEY }}" | base64 --decode > android/google_play_key.json
+      # - name: Write google_play_key.json safely
+      #   run: |
+      #    echo "${{ secrets.GOOGLE_PLAY_KEY }}" | base64 --decode > android/google_play_key.json
 
 
-      - name: Install Fastlane
-        run: sudo gem install fastlane -NV
+      # - name: Install Fastlane
+      #   run: sudo gem install fastlane -NV
 
-      - name: Upload to Google Play
-        working-directory: android
-        run: fastlane release
+      # - name: Upload to Google Play
+      #   working-directory: android
+      #   run: fastlane release
       
       - name: Set up Xcode
         run: sudo xcode-select -s /Applications/Xcode.app
