@@ -52,3 +52,9 @@ jobs:
       - name: Upload to Google Play
         working-directory: android
         run: fastlane release
+      
+      - name: Set up Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build iOS IPA
+        run: flutter build ipa --release --no-codesign
