@@ -165,6 +165,8 @@ class HandbookDetailScreen extends StatelessWidget {
             return "View PDF";
           } else if (lower.endsWith(".doc") || lower.endsWith(".docx")) {
             return "View Word Document";
+          } else if (lower.endsWith(".odt") || lower.endsWith(".odt")) {
+            return "View Odt Document";
           } else if (lower.endsWith(".xls") || lower.endsWith(".xlsx")) {
             return "View Excel Sheet";
           } else if (lower.endsWith(".ppt") || lower.endsWith(".pptx")) {
@@ -229,7 +231,7 @@ class HandbookDetailScreen extends StatelessWidget {
                   Expanded(
                     child: Text(
                       getFileLabel(
-                          fileName), // 👈 use friendly label instead of filename
+                          fileName), 
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

@@ -44,8 +44,8 @@ class _CourseViewScreenState extends State<CourseViewScreen>
   customAppBar: AppBar(
   title: const Text('ROOSTER'),
   backgroundColor: theme.primaryColor,
-  elevation: 0, // 👈 removes shadow
-  scrolledUnderElevation: 0, // 👈 for Material 3
+  elevation: 0, 
+  scrolledUnderElevation: 0, 
   bottom: PreferredSize(
     preferredSize: const Size.fromHeight(48),
     child: TabBar(
@@ -104,9 +104,12 @@ class _CourseViewScreenState extends State<CourseViewScreen>
               height: 180,
               width: double.infinity,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Text(
-                'err $imageUrl',
-              ),
+              errorBuilder: (_, __, ___) => Image.asset(
+              'assets/images/no_image.jpg',
+              height: 180,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              )
             ),
           ),
           const SizedBox(height: 16),

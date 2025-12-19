@@ -12,7 +12,7 @@ ContentType parseContentType(String type, String data) {
     case 'video':
       return ContentType.video;
     case 'document':
-      if (['pdf', 'doc', 'docx', 'xls', 'xlsx'].contains(ext)) {
+      if (['pdf', 'doc', 'docx', 'xls', 'xlsx', 'odt'].contains(ext)) {
         return ContentType.document;
       }
       return ContentType.text;
